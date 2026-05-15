@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { ChatPage } from '@/pages/chat'
+import { ChatPage } from '@/features/chat/ChatPage'
 
 export const Route = createFileRoute('/chat/$chatId')({
   component: function ChatRoute() {
