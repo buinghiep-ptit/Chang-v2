@@ -4,7 +4,8 @@ import { AnimatePresence } from 'framer-motion'
 import { ChangComposer } from '@/components/chang/composer'
 import { ChangTopBar } from '@/components/chang/top-bar'
 import { MessageBubble, ThinkingBubble } from '@/components/chang/message-bubble'
-import { useChatStore, getChangResponse } from '@/store/chat-store'
+import { useChatStore } from '@/store/chat-store'
+import { useChatStream } from '@/hooks/use-chat-stream'
 
 interface ChatMobileProps {
   chatId: string
@@ -14,26 +15,23 @@ export function ChatMobile({ chatId }: ChatMobileProps) {
   const navigate = useNavigate()
   const conversations = useChatStore((s) => s.conversations)
   const addUserMsg = useChatStore((s) => s.addUserMsg)
-  const addChangMsg = useChatStore((s) => s.addChangMsg)
   const conv = conversations.find((c) => c.id === chatId)
   const bottomRef = useRef<HTMLDivElement>(null)
+  const { sendMessage } = useChatStream(chatId)
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [conv?.messages.length, conv?.status])
 
   function handleSend(text: string, files?: File[]): void {
-    if (!conv || conv.status === 'thinking') return
+    if (!conv || conv.status !== 'idle') return
     const attachments = files?.map((f) => ({
       name: f.name,
       type: f.type,
       objectUrl: URL.createObjectURL(f),
     }))
     addUserMsg(chatId, text, attachments)
-    const res = getChangResponse(text)
-    setTimeout(() => {
-      addChangMsg(chatId, res.content, res.tasks)
-    }, 1800)
+    sendMessage(text, conv.backendConvId ?? null)
   }
 
   if (!conv) {
@@ -44,6 +42,8 @@ export function ChatMobile({ chatId }: ChatMobileProps) {
     )
   }
 
+  const isDisabled = conv.status !== 'idle'
+
   return (
     <>
       <ChangTopBar
@@ -53,18 +53,24 @@ export function ChatMobile({ chatId }: ChatMobileProps) {
 
       <div className="flex-1 overflow-y-auto px-3 py-3 flex flex-col gap-3 no-scrollbar md:px-6 md:max-w-2xl md:mx-auto md:w-full">
         <AnimatePresence initial={false}>
-          {conv.messages.map((msg) => (
-            <MessageBubble key={msg.id} message={msg} />
+          {conv.messages.map((msg, i) => (
+            <MessageBubble
+              key={msg.id}
+              message={msg}
+              isStreaming={conv.status === 'streaming' && i === conv.messages.length - 1}
+            />
           ))}
 
-          {conv.status === 'thinking' && <ThinkingBubble key="thinking" />}
+          {conv.status === 'thinking' && (
+            <ThinkingBubble key="thinking" botName={conv.botName} botAvatar={conv.botAvatar} />
+          )}
         </AnimatePresence>
 
         <div ref={bottomRef} />
       </div>
 
       <div className="md:max-w-2xl md:mx-auto md:w-full">
-        <ChangComposer tabs onSend={handleSend} disabled={conv.status === 'thinking'} />
+        <ChangComposer tabs onSend={handleSend} disabled={isDisabled} />
       </div>
     </>
   )

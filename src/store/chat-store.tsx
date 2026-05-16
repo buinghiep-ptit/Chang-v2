@@ -20,6 +20,8 @@ export type Message = {
   id: string
   role: MessageRole
   content: string
+  botName?: string
+  botAvatar?: string
   tasks?: TaskStep[]
   attachments?: Attachment[]
 }
@@ -28,9 +30,12 @@ export type Conversation = {
   id: string
   title: string
   messages: Message[]
-  status: 'idle' | 'thinking'
+  status: 'idle' | 'thinking' | 'streaming'
   createdAt: Date
   group?: string
+  backendConvId?: string | null
+  botName?: string
+  botAvatar?: string
 }
 
 // ── Store ──────────────────────────────────────────────────────
@@ -41,6 +46,9 @@ interface ChatStore {
   addChangMsg: (convId: string, content: string, tasks?: TaskStep[]) => void
   finishTask: (convId: string, msgId: string, taskId: string) => void
   setStatus: (convId: string, status: Conversation['status']) => void
+  setThinking: (convId: string, botName: string, botAvatar: string) => void
+  handleInProgress: (convId: string, botName: string, botAvatar: string, token: string) => void
+  finishStream: (convId: string, fullText: string, botName: string, botAvatar: string, backendConvId: string) => void
 }
 
 export const useChatStore = create<ChatStore>((set) => ({
@@ -102,9 +110,59 @@ export const useChatStore = create<ChatStore>((set) => ({
     set((s) => ({
       conversations: s.conversations.map((c) => (c.id === convId ? { ...c, status } : c)),
     })),
+
+  setThinking: (convId, botName, botAvatar) =>
+    set((s) => ({
+      conversations: s.conversations.map((c) =>
+        c.id === convId ? { ...c, status: 'thinking', botName, botAvatar } : c,
+      ),
+    })),
+
+  handleInProgress: (convId, botName, botAvatar, token) =>
+    set((s) => ({
+      conversations: s.conversations.map((c) => {
+        if (c.id !== convId) return c
+        if (c.status === 'streaming') {
+          // Append token to the in-progress bot message in-place
+          const messages = [...c.messages]
+          const last = messages[messages.length - 1]
+          messages[messages.length - 1] = { ...last, content: last.content + token }
+          return { ...c, messages }
+        }
+        // First token: create the bot message and start streaming
+        return {
+          ...c,
+          status: 'streaming',
+          botName,
+          botAvatar,
+          messages: [...c.messages, { id: nanoid(), role: 'chang', content: token, botName, botAvatar }],
+        }
+      }),
+    })),
+
+  finishStream: (convId, fullText, botName, botAvatar, backendConvId) =>
+    set((s) => ({
+      conversations: s.conversations.map((c) => {
+        if (c.id !== convId) return c
+        // Overwrite the last bot message with the authoritative full text
+        const messages = [...c.messages]
+        const last = messages[messages.length - 1]
+        if (last?.role === 'chang') {
+          messages[messages.length - 1] = { ...last, content: fullText, botName, botAvatar }
+        }
+        return {
+          ...c,
+          status: 'idle',
+          botName: undefined,
+          botAvatar: undefined,
+          backendConvId,
+          messages,
+        }
+      }),
+    })),
 }))
 
-// ── Simulated Chang responses ──────────────────────────────────
+// ── Mock responses (prototype pages only) ─────────────────────
 const RESPONSES: [RegExp, string, TaskStep[]?][] = [
   [
     /bảo hiểm/i,

@@ -2,9 +2,44 @@ import { Check, ChevronDown, FileImage, FileText, File, X } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useState } from 'react'
 import { createPortal } from 'react-dom'
+import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
+import remarkMath from 'remark-math'
+import rehypeKatex from 'rehype-katex'
+import rehypeRaw from 'rehype-raw'
 import { Mascot } from './mascot'
 import { cn } from '@/lib/utils'
+import { preprocessLaTeX } from '@/lib/markdown'
 import type { Message, Attachment } from '@/store/chat-store'
+
+// ── Markdown renderer ──────────────────────────────────────────
+function MarkdownContent({ content }: { content: string }) {
+  return (
+    <ReactMarkdown
+      remarkPlugins={[remarkGfm, remarkMath]}
+      rehypePlugins={[rehypeKatex, rehypeRaw]}
+      className="prose prose-sm max-w-none break-words"
+    >
+      {preprocessLaTeX(content)}
+    </ReactMarkdown>
+  )
+}
+
+// ── Bot avatar ─────────────────────────────────────────────────
+function BotAvatar({ src }: { src?: string }) {
+  const [imgError, setImgError] = useState(false)
+  if (src && !imgError) {
+    return (
+      <img
+        src={src}
+        alt="bot avatar"
+        className="w-full h-full object-cover"
+        onError={() => setImgError(true)}
+      />
+    )
+  }
+  return <Mascot size={22} />
+}
 
 // ── File helpers ───────────────────────────────────────────────
 function AttachmentIcon({ type, size = 14 }: { type: string; size?: number }) {
@@ -93,9 +128,10 @@ function AttachmentRow({ att, onPreview }: { att: Attachment; onPreview: () => v
 // ── Main MessageBubble ─────────────────────────────────────────
 interface MessageBubbleProps {
   message: Message
+  isStreaming?: boolean
 }
 
-export function MessageBubble({ message }: MessageBubbleProps) {
+export function MessageBubble({ message, isStreaming = false }: MessageBubbleProps) {
   const [thinkingOpen, setThinkingOpen] = useState(false)
   const [preview, setPreview] = useState<Attachment | null>(null)
   const isUser = message.role === 'user'
@@ -112,7 +148,7 @@ export function MessageBubble({ message }: MessageBubbleProps) {
         {/* Chang avatar */}
         {!isUser && (
           <div className="shrink-0 w-8 h-8 rounded-full bg-info/10 flex items-center justify-center overflow-hidden mt-0.5">
-            <Mascot size={22} />
+            <BotAvatar src={message.botAvatar} />
           </div>
         )}
 
@@ -135,7 +171,20 @@ export function MessageBubble({ message }: MessageBubbleProps) {
                 : 'bg-muted text-foreground tail-l',
             )}
           >
-            {message.content}
+            {isUser ? (
+              message.content
+            ) : (
+              <>
+                <MarkdownContent content={message.content} />
+                {isStreaming && (
+                  <motion.span
+                    className="inline-block w-0.5 h-4 bg-foreground/60 ml-0.5 align-text-bottom"
+                    animate={{ opacity: [1, 0] }}
+                    transition={{ duration: 0.5, repeat: Infinity }}
+                  />
+                )}
+              </>
+            )}
           </div>
 
           {/* Task steps (Chang only) */}
@@ -191,7 +240,13 @@ export function MessageBubble({ message }: MessageBubbleProps) {
   )
 }
 
-export function ThinkingBubble() {
+interface StatusBubbleProps {
+  botName?: string
+  botAvatar?: string
+  label: string
+}
+
+function StatusBubble({ botName, botAvatar, label }: StatusBubbleProps) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 6 }}
@@ -200,18 +255,28 @@ export function ThinkingBubble() {
       className="flex gap-2 items-start"
     >
       <div className="shrink-0 w-8 h-8 rounded-full bg-info/10 flex items-center justify-center overflow-hidden">
-        <Mascot size={22} />
+        <BotAvatar src={botAvatar} />
       </div>
-      <div className="bg-muted rounded-2xl tail-l px-4 py-3 flex items-center gap-1.5">
-        {[0, 1, 2].map(i => (
-          <motion.span
-            key={i}
-            className="w-2 h-2 rounded-full bg-muted-foreground/60"
-            animate={{ y: [0, -4, 0] }}
-            transition={{ duration: 0.6, repeat: Infinity, delay: i * 0.15 }}
-          />
-        ))}
+      <div className="bg-muted rounded-2xl tail-l px-4 py-3 flex items-center gap-2">
+        <span className="text-[13px] text-muted-foreground">
+          {botName ? `${botName} ${label}` : label}
+        </span>
+        <div className="flex items-center gap-1">
+          {[0, 1, 2].map(i => (
+            <motion.span
+              key={i}
+              className="w-1.5 h-1.5 rounded-full bg-muted-foreground/60"
+              animate={{ y: [0, -3, 0] }}
+              transition={{ duration: 0.6, repeat: Infinity, delay: i * 0.15 }}
+            />
+          ))}
+        </div>
       </div>
     </motion.div>
   )
 }
+
+export function ThinkingBubble({ botName, botAvatar }: { botName?: string; botAvatar?: string }) {
+  return <StatusBubble botName={botName} botAvatar={botAvatar} label="đang suy nghĩ" />
+}
+

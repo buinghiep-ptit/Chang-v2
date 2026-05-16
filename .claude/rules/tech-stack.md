@@ -26,7 +26,7 @@ alwaysApply: true
 | Toast           | sonner                                                |
 | Icons           | lucide-react                                          |
 | Font            | Inter Variable (`@fontsource-variable/inter`)         |
-| Markdown        | streamdown                                            |
+| Markdown        | react-markdown + remark-gfm + remark-math + rehype-katex + rehype-raw |
 
 ## Lệnh
 
