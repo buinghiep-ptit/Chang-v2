@@ -136,7 +136,7 @@ export function TasksDesktop() {
       </div>
 
       <div className="px-6 pb-6">
-        <ChangComposer tabs onSend={handleSend} />
+        <ChangComposer onSend={handleSend} />
       </div>
     </>
   )

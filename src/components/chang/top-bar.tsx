@@ -1,49 +1,117 @@
-import { Bell, Bot, ChevronLeft, Moon, Search, Sun } from 'lucide-react'
-import { useTheme } from 'next-themes'
+import { useState } from 'react'
+import { AnimatePresence } from 'framer-motion'
+import { Bell, ChevronRight, Ellipsis, Menu, PanelLeft, Plus } from 'lucide-react'
+import { Mascot } from './mascot'
+import { NotificationDropdown } from './notification-dropdown'
 import { cn } from '@/lib/utils'
 
 interface TopBarProps {
   title?: string
   className?: string
-  onBack?: () => void
+  notificationCount?: number
+  onMenu?: () => void
+  onPlus?: () => void
+  onBell?: () => void
+  onEllipsis?: () => void
+  /** Mobile: hamburger / Desktop: panel toggle */
+  variant?: 'mobile' | 'desktop'
 }
 
-export function ChangTopBar({ title, className, onBack }: TopBarProps) {
-  const { resolvedTheme, setTheme } = useTheme()
+export function ChangTopBar({
+  title,
+  className,
+  notificationCount = 0,
+  onMenu,
+  onPlus,
+  onBell,
+  onEllipsis,
+  variant = 'mobile',
+}: TopBarProps) {
+  const [notifOpen, setNotifOpen] = useState(false)
+
+  function handleBell(): void {
+    if (onBell) onBell()
+    else setNotifOpen((v) => !v)
+  }
 
   return (
-    <div className={cn('frost h-14 px-3 flex items-center gap-2 border-b border-border shrink-0', className)}>
-      {onBack ? (
-        <button
-          onClick={onBack}
-          className="w-9 h-9 rounded-lg flex items-center justify-center text-muted-foreground hover:bg-muted transition-colors"
-        >
-          <ChevronLeft size={22} />
-        </button>
-      ) : (
-        <button className="w-9 h-9 rounded-lg flex items-center justify-center text-muted-foreground hover:bg-muted transition-colors">
-          <Search size={18} />
-        </button>
+    <div
+      className={cn(
+        'h-16 shrink-0 bg-background border-b border-border flex items-center justify-between',
+        className,
       )}
-
-      <div className="flex items-center gap-2 px-2 py-1 rounded-lg bg-muted">
-        <div className="w-7 h-7 rounded-md bg-warning/15 flex items-center justify-center text-warning">
-          <Bot size={16} />
-        </div>
-        <span className="font-semibold text-[15px]">{title ?? 'Chang'}</span>
+    >
+      <div className="flex items-center gap-2 pl-4 pr-0">
+        <IconButton onClick={onMenu}>
+          {variant === 'desktop' ? <PanelLeft size={16} /> : <Menu size={16} />}
+        </IconButton>
+        <Mascot size={20} />
+        <nav aria-label="breadcrumb" className="flex items-center gap-1.5">
+          <span className="text-sm text-muted-foreground">Chang</span>
+          {title && (
+            <>
+              <ChevronRight size={14} className="text-muted-foreground" />
+              <span className="text-sm text-foreground truncate max-w-[160px]">
+                {title}
+              </span>
+            </>
+          )}
+        </nav>
       </div>
 
-      <div className="ml-auto flex items-center gap-1">
-        <button className="w-9 h-9 rounded-lg flex items-center justify-center text-muted-foreground hover:bg-muted transition-colors">
-          <Bell size={18} />
-        </button>
-        <button
-          onClick={() => setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')}
-          className="w-9 h-9 rounded-lg flex items-center justify-center text-muted-foreground hover:bg-muted transition-colors"
-        >
-          {resolvedTheme === 'dark' ? <Sun size={17} /> : <Moon size={17} />}
-        </button>
+      <div className="flex items-center gap-2 pr-3">
+        <IconButton onClick={onPlus}>
+          <Plus size={16} />
+        </IconButton>
+
+        <div className="relative">
+          <IconButton onClick={handleBell} className="relative">
+            <Bell size={16} />
+            {notificationCount > 0 && (
+              <span className="absolute top-0 right-0 size-3.5 rounded-full bg-primary text-primary-foreground text-[10px] leading-none font-medium flex items-center justify-center">
+                {notificationCount > 9 ? '9+' : notificationCount}
+              </span>
+            )}
+          </IconButton>
+          <AnimatePresence>
+            {notifOpen && (
+              <div className="absolute right-0 top-full mt-2 z-50">
+                <NotificationDropdown onClose={() => setNotifOpen(false)} />
+              </div>
+            )}
+          </AnimatePresence>
+        </div>
+
+        <IconButton onClick={onEllipsis} variant="accent">
+          <Ellipsis size={16} />
+        </IconButton>
       </div>
     </div>
+  )
+}
+
+function IconButton({
+  children,
+  onClick,
+  className,
+  variant = 'plain',
+}: {
+  children: React.ReactNode
+  onClick?: () => void
+  className?: string
+  variant?: 'plain' | 'accent'
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={cn(
+        'size-7 rounded-lg inline-flex items-center justify-center text-foreground/80 hover:text-foreground transition-colors',
+        variant === 'accent' ? 'bg-accent hover:bg-accent/80' : 'hover:bg-muted',
+        className,
+      )}
+    >
+      {children}
+    </button>
   )
 }

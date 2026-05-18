@@ -111,7 +111,7 @@ export function TasksMobile() {
 
   return (
     <>
-      <ChangTopBar />
+      <ChangTopBar title="Công việc" notificationCount={9} />
       <div className="flex-1 overflow-y-auto px-3 py-3 flex flex-col gap-3 no-scrollbar md:px-6 md:py-4 md:max-w-2xl md:mx-auto md:w-full">
         <div className="flex items-center gap-2 px-1">
           <button
@@ -144,7 +144,7 @@ export function TasksMobile() {
           ))}
         </AnimatePresence>
       </div>
-      <ChangComposer tabs onSend={handleSend} />
+      <ChangComposer onSend={handleSend} />
     </>
   )
 }

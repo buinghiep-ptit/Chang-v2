@@ -8,7 +8,8 @@ import { detectAppMode } from '@/lib/app-mode'
 import { AppModeProvider } from '@/app/app-mode-context'
 import { StandaloneShell } from '@/app/standalone-shell'
 import { EmbeddedShell } from '@/app/embedded-shell'
-import '@fontsource-variable/inter'
+import '@fontsource-variable/noto-sans/index.css'
+import '@fontsource-variable/jetbrains-mono/index.css'
 import './styles/globals.css'
 
 const mode = detectAppMode()

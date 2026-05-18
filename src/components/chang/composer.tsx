@@ -1,401 +1,350 @@
-import { useCallback, useEffect, useRef, useState } from "react";
-import { useDropzone } from "react-dropzone";
-import { AnimatePresence, motion } from "framer-motion";
-import { useRouterState } from "@tanstack/react-router";
+import { useCallback, useEffect, useRef, useState } from 'react'
+import { useDropzone } from 'react-dropzone'
 import {
-  ArrowUp,
-  Bot,
-  BrainCircuit,
+  Bookmark,
+  CornerDownLeft,
   File,
-  FileImage,
   FileText,
-  Mic,
-  Paperclip,
-  Upload,
+  Lightbulb,
+  Music2,
+  Plus,
   X,
-} from "lucide-react";
-import { Link } from "@tanstack/react-router";
-import { cn } from "@/lib/utils";
+  type LucideIcon,
+} from 'lucide-react'
+import { PromptRecommendationPanel } from './prompt-recommendation-panel'
+import { PromptTemplatePanel } from './prompt-template-panel'
+import { PlusMenu } from './plus-menu'
+import { cn } from '@/lib/utils'
 
-// ── File helpers ───────────────────────────────────────────────
-function getFileIcon(file: File) {
-  if (file.type.startsWith("image/"))
-    return <FileImage size={13} className="shrink-0 text-muted-foreground" />;
-  if (file.type === "application/pdf")
-    return <FileText size={13} className="shrink-0 text-red-500" />;
-  return <File size={13} className="shrink-0 text-muted-foreground" />;
-}
+export type ComposerPanel = 'recommendation' | 'template' | null
 
-function getFileBg(file: File) {
-  if (file.type === "application/pdf")
-    return "bg-red-50 border-red-100 dark:bg-red-950/30 dark:border-red-900/40";
-  return "bg-muted/60 border-border";
-}
-
-// ── Upload section (rendered inside the unified block) ─────────
-interface UploadSectionProps {
-  files: File[];
-  onAdd: (f: File[]) => void;
-  onRemove: (i: number) => void;
-  onClose: () => void;
-}
-
-function UploadSection({
-  files,
-  onAdd,
-  onRemove,
-  onClose,
-}: UploadSectionProps) {
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    onDrop: onAdd,
-    noClick: files.length > 0, // when files exist, only the "add more" sub-zone is clickable
-    accept: {
-      "image/*": [],
-      "application/pdf": [],
-      "application/msword": [],
-      "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
-        [],
-    },
-    multiple: true,
-  });
-
-  return (
-    <div>
-      {/* Header */}
-      <div className="px-4 py-2.5 flex items-center gap-2 border-b border-border">
-        <span className="text-[13px] font-semibold flex-1">
-          Tải lên nội dung
-        </span>
-        <button
-          onClick={onClose}
-          className="w-5 h-5 rounded-md flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
-        >
-          <X size={13} />
-        </button>
-      </div>
-
-      {files.length === 0 ? (
-        /* Empty — full dropzone */
-        <div
-          {...getRootProps()}
-          className={cn(
-            "py-6 flex flex-col items-center gap-1.5 cursor-pointer select-none transition-colors",
-            isDragActive ? "bg-primary/5" : "hover:bg-muted/30",
-          )}
-        >
-          <input {...getInputProps()} />
-          <div
-            className={cn(
-              "w-10 h-10 rounded-full flex items-center justify-center transition-colors",
-              isDragActive
-                ? "bg-primary/15 text-primary"
-                : "bg-muted text-muted-foreground",
-            )}
-          >
-            <Upload size={20} />
-          </div>
-          <span className="text-[14px] font-medium leading-tight">
-            Tải nội dung
-          </span>
-          <span className="text-[12px] text-muted-foreground">
-            {isDragActive
-              ? "Thả file vào đây…"
-              : "Nhấn hoặc kéo nội dung cần tải"}
-          </span>
-        </div>
-      ) : (
-        /* Has files — chip grid + "add more" sub-zone */
-        <div
-          {...getRootProps()}
-          className={cn(
-            "p-3 flex flex-wrap gap-2 transition-colors",
-            isDragActive && "bg-primary/5",
-          )}
-        >
-          <input {...getInputProps()} />
-          {files.map((f, i) => (
-            <div
-              key={i}
-              className={cn(
-                "relative flex items-center gap-1.5 pl-2.5 pr-6 py-1.5 rounded-sm border text-[12px] max-w-[160px]",
-                getFileBg(f),
-              )}
-            >
-              {getFileIcon(f)}
-              <span className="truncate">{f.name}</span>
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onRemove(i);
-                }}
-                className="absolute right-1 top-1 w-4 h-4 rounded-full bg-foreground/15 hover:bg-foreground/25 flex items-center justify-center transition-colors"
-              >
-                <X size={8} className="text-foreground" strokeWidth={3} />
-              </button>
-            </div>
-          ))}
-          {/* Add more */}
-          <label className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-dashed border-border text-[12px] text-muted-foreground cursor-pointer hover:border-primary/40 hover:bg-primary/5 hover:text-primary transition-colors">
-            <Upload size={12} />
-            Thêm
-            <input {...getInputProps()} className="hidden" />
-          </label>
-        </div>
-      )}
-
-      {/* Divider before input */}
-      <div className="border-b border-border" />
-    </div>
-  );
-}
-
-// ── Main Composer ──────────────────────────────────────────────
 interface ComposerProps {
-  tabs?: boolean;
-  onSend?: (text: string, files?: File[]) => void;
-  disabled?: boolean;
-  className?: string;
+  onSend?: (text: string, files?: File[]) => void
+  disabled?: boolean
+  placeholder?: string
+  className?: string
+  panel?: ComposerPanel
+  onPanelChange?: (panel: ComposerPanel) => void
 }
 
 export function ChangComposer({
-  tabs = false,
   onSend,
   disabled,
+  placeholder = 'Nhắn cho Chang...',
   className,
+  panel: panelProp,
+  onPanelChange,
 }: ComposerProps) {
-  const [value, setValue] = useState("");
-  const [uploadOpen, setUploadOpen] = useState(false);
-  const [files, setFiles] = useState<File[]>([]);
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const { location } = useRouterState();
+  const [value, setValue] = useState('')
+  const [files, setFiles] = useState<File[]>([])
+  const [panelInternal, setPanelInternal] = useState<ComposerPanel>(null)
+  const [plusOpen, setPlusOpen] = useState(false)
+  const textareaRef = useRef<HTMLTextAreaElement>(null)
 
-  // ── Auto-focus on mount ──
+  const isControlled = panelProp !== undefined
+  const panel = isControlled ? panelProp : panelInternal
+  const setPanel = (next: ComposerPanel): void => {
+    if (!isControlled) setPanelInternal(next)
+    onPanelChange?.(next)
+  }
+
+  function togglePanel(next: Exclude<ComposerPanel, null>) {
+    setPanel(panel === next ? null : next)
+  }
+
+  function applyPrompt(text: string) {
+    setValue(text)
+    setPanel(null)
+    requestAnimationFrame(() => {
+      const el = textareaRef.current
+      if (!el) return
+      el.focus()
+      el.style.height = 'auto'
+      el.style.height = Math.min(el.scrollHeight, 140) + 'px'
+    })
+  }
+
   useEffect(() => {
     textareaRef.current?.focus()
   }, [])
 
-  // ── Add files (dedup by name) ──
   const addFiles = useCallback((accepted: File[]) => {
     setFiles((prev) => {
-      const names = new Set(prev.map((f) => f.name));
-      return [...prev, ...accepted.filter((f) => !names.has(f.name))];
-    });
-    setUploadOpen(true);
-  }, []);
+      const names = new Set(prev.map((f) => f.name))
+      return [...prev, ...accepted.filter((f) => !names.has(f.name))]
+    })
+  }, [])
 
-  // ── Drag onto entire composer ──
-  const { getRootProps: getComposerDropProps, isDragActive: isComposerDrag } =
-    useDropzone({
-      onDrop: addFiles,
-      noClick: true,
-      noKeyboard: true,
-      accept: {
-        "image/*": [],
-        "application/pdf": [],
-        "application/msword": [],
-        "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
-          [],
-      },
-    });
+  const { getInputProps, open } = useDropzone({
+    onDrop: addFiles,
+    noClick: true,
+    noKeyboard: true,
+    accept: {
+      'image/*': [],
+      'application/pdf': [],
+      'application/msword': [],
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document': [],
+    },
+  })
 
-  // ── Clipboard paste ──
-  function onPaste(e: React.ClipboardEvent<HTMLTextAreaElement>) {
-    const imageItems = Array.from(e.clipboardData.items).filter(
-      (it) => it.kind === "file" && it.type.startsWith("image/"),
-    );
-    if (imageItems.length > 0) {
-      e.preventDefault();
-      const pasted = imageItems
-        .map((it) => it.getAsFile())
-        .filter(Boolean) as File[];
-      addFiles(pasted);
-    }
-  }
-
-  // ── Auto-resize textarea ──
   function resizeTextarea() {
-    const el = textareaRef.current;
-    if (!el) return;
-    el.style.height = "auto";
-    el.style.height = Math.min(el.scrollHeight, 140) + "px";
+    const el = textareaRef.current
+    if (!el) return
+    el.style.height = 'auto'
+    el.style.height = Math.min(el.scrollHeight, 140) + 'px'
   }
 
   function onInput(e: React.ChangeEvent<HTMLTextAreaElement>) {
-    setValue(e.target.value);
-    resizeTextarea();
+    setValue(e.target.value)
+    resizeTextarea()
   }
 
-  // ── Keyboard: Enter = send, Shift+Enter = newline ──
   function onKeyDown(e: React.KeyboardEvent<HTMLTextAreaElement>) {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      send();
+    if (e.key === 'Enter' && !e.shiftKey && !e.nativeEvent.isComposing) {
+      e.preventDefault()
+      send()
     }
-    // Shift+Enter falls through → native newline behaviour
   }
 
-  // ── Send ──
+  function onPaste(e: React.ClipboardEvent<HTMLTextAreaElement>) {
+    const imageItems = Array.from(e.clipboardData.items).filter(
+      (it) => it.kind === 'file' && it.type.startsWith('image/'),
+    )
+    if (imageItems.length > 0) {
+      e.preventDefault()
+      const pasted = imageItems.map((it) => it.getAsFile()).filter(Boolean) as File[]
+      addFiles(pasted)
+    }
+  }
+
   function send() {
-    const text = value.trim();
-    if ((!text && files.length === 0) || disabled) return;
-    onSend?.(
-      text || `[Đính kèm ${files.length} file]`,
-      files.length > 0 ? files : undefined,
-    );
-    setValue("");
-    setFiles([]);
-    setUploadOpen(false);
-    if (textareaRef.current) {
-      textareaRef.current.style.height = "auto";
-    }
+    const text = value.trim()
+    if ((!text && files.length === 0) || disabled) return
+    onSend?.(text || `[Đính kèm ${files.length} file]`, files.length > 0 ? files : undefined)
+    setValue('')
+    setFiles([])
+    if (textareaRef.current) textareaRef.current.style.height = 'auto'
   }
 
-  const canSend = (value.trim().length > 0 || files.length > 0) && !disabled;
-
-  const isApps = location.pathname === "/apps";
-  const isTasks = location.pathname === "/tasks";
+  const canSend = !disabled && (value.trim().length > 0 || files.length > 0)
 
   return (
     <div
       className={cn(
-        "px-3 pt-2 bg-background/95 backdrop-blur-sm flex flex-col gap-2 shrink-0",
+        'w-full bg-background border border-border rounded-lg shadow-xs',
         className,
       )}
-      style={{ paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 0.75rem)' }}
-      {...getComposerDropProps()}
     >
-      {/* ── Unified block: upload section + input row ── */}
-      <div
-        className={cn(
-          "input-focus-ring",
-          isComposerDrag && "ring-2 ring-primary/20",
-        )}
-      >
-      <div className="rounded-xl bg-card overflow-hidden">
-        {/* Upload section animates in/out above the input */}
-        <AnimatePresence initial={false}>
-          {uploadOpen && (
-            <motion.div
-              key="upload"
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: "auto", opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
-              className="overflow-hidden"
-            >
-              <UploadSection
-                files={files}
-                onAdd={addFiles}
-                onRemove={(i) =>
-                  setFiles((f) => f.filter((_, idx) => idx !== i))
-                }
-                onClose={() => setUploadOpen(false)}
-              />
-            </motion.div>
-          )}
-        </AnimatePresence>
+      <input {...getInputProps()} />
 
-        {/* Input row */}
-        <div className="flex items-start gap-2 px-3 pt-2.5 pb-2.5">
-          <textarea
-            ref={textareaRef}
-            rows={1}
-            value={value}
-            onChange={onInput}
-            onKeyDown={onKeyDown}
-            onPaste={onPaste}
-            disabled={disabled}
-            placeholder="Nhập câu hỏi cho Chang…"
-            className={cn(
-              "flex-1 resize-none bg-transparent text-[14px] text-foreground leading-5 caret-primary",
-              "placeholder:text-muted-foreground placeholder:align-middle",
-              "focus:outline-none min-h-[20px] max-h-[140px]",
-              "pt-1", // tiny nudge so first-line aligns with button icons
-              "disabled:opacity-50",
-            )}
+      {panel === 'recommendation' && (
+        <>
+          <PromptRecommendationPanel
+            onClose={() => setPanel(null)}
+            onSelect={applyPrompt}
           />
-          <div className="flex items-center gap-1 shrink-0 self-end pb-0.5">
-            <button className="w-7 h-7 rounded-full flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors">
-              <Mic size={15} />
-            </button>
-            <button
-              onClick={send}
-              disabled={!canSend}
-              className={cn(
-                "w-8 h-8 rounded-full flex items-center justify-center transition-all duration-150",
-                canSend
-                  ? "bg-primary text-primary-foreground shadow-sm hover:bg-primary/90 scale-100"
-                  : "bg-muted text-muted-foreground cursor-not-allowed opacity-50 scale-90",
-              )}
-            >
-              <ArrowUp size={16} />
-            </button>
-          </div>
-        </div>
-      </div>
-      </div>
+          <div className="h-px bg-border" />
+        </>
+      )}
+      {panel === 'template' && (
+        <>
+          <PromptTemplatePanel
+            onClose={() => setPanel(null)}
+            onSelect={applyPrompt}
+          />
+          <div className="h-px bg-border" />
+        </>
+      )}
 
-      {/* ── Chip row ── */}
-      <div className="flex items-center gap-2">
-        {/* Attach button */}
+      {files.length > 0 && <FileChips files={files} onRemove={(i) => setFiles((p) => p.filter((_, idx) => idx !== i))} />}
+
+      <textarea
+        ref={textareaRef}
+        value={value}
+        onChange={onInput}
+        onKeyDown={onKeyDown}
+        onPaste={onPaste}
+        placeholder={placeholder}
+        rows={1}
+        disabled={disabled}
+        className={cn(
+          'w-full block resize-none bg-transparent outline-none',
+          'p-3 text-base leading-6 placeholder:text-muted-foreground',
+          'min-h-[40px]',
+          'disabled:opacity-50',
+        )}
+      />
+
+      <div className="pt-1.5 pb-3 px-3 flex items-center gap-2">
+        <div className="relative">
+          <ToolButton
+            onClick={() => setPlusOpen((v) => !v)}
+            variant="outlined"
+            active={plusOpen}
+            disabled={disabled}
+          >
+            <Plus size={16} />
+          </ToolButton>
+          {plusOpen && (
+            <div className="absolute bottom-full mb-2 left-0 z-20">
+              <PlusMenu
+                onClose={() => setPlusOpen(false)}
+                onAttach={() => {
+                  setPlusOpen(false)
+                  open()
+                }}
+              />
+            </div>
+          )}
+        </div>
+        <ToolButton
+          onClick={() => togglePanel('recommendation')}
+          active={panel === 'recommendation'}
+          disabled={disabled}
+        >
+          <Lightbulb size={16} />
+        </ToolButton>
+        <ToolButton
+          onClick={() => togglePanel('template')}
+          active={panel === 'template'}
+          disabled={disabled}
+        >
+          <Bookmark size={16} />
+        </ToolButton>
+
+        <div className="h-4 w-px bg-border" />
+
+        <span className="flex-1 font-mono text-xs leading-4 text-muted-foreground truncate">
+          @agent · /skill
+        </span>
+
+        <div className="h-4 w-px bg-border" />
+
         <button
-          onClick={() => { setUploadOpen((o) => !o); textareaRef.current?.focus() }}
+          type="button"
+          onClick={send}
+          disabled={!canSend}
+          aria-label="Gửi"
           className={cn(
-            "w-8 h-8 rounded-full flex items-center justify-center transition-colors relative",
-            uploadOpen || files.length > 0
-              ? "bg-primary/10 text-primary"
-              : "text-muted-foreground hover:bg-muted",
+            'size-6 rounded-lg shadow-xs inline-flex items-center justify-center',
+            'bg-primary text-primary-foreground transition-opacity',
+            !canSend && 'opacity-40 cursor-not-allowed',
           )}
         >
-          <Paperclip size={15} />
-          {files.length > 0 && (
-            <span className="absolute -top-0.5 -right-0.5 w-[15px] h-[15px] rounded-full bg-primary text-primary-foreground text-[9px] font-bold flex items-center justify-center leading-none">
-              {files.length}
-            </span>
-          )}
+          <CornerDownLeft size={14} />
         </button>
-
-        {tabs ? (
-          <>
-            <Link
-              to="/apps"
-              className={cn(
-                "px-3 h-7 rounded-full border border-dashed text-[12px] font-medium flex items-center transition-colors",
-                isApps
-                  ? "border-primary bg-primary/10 text-primary"
-                  : "border-border text-muted-foreground hover:border-primary/40 hover:text-primary hover:bg-primary/5",
-              )}
-            >
-              Apps
-            </Link>
-            <Link
-              to="/tasks"
-              className={cn(
-                "px-3 h-7 rounded-full border border-dashed text-[12px] font-medium flex items-center transition-colors",
-                isTasks
-                  ? "border-primary bg-primary/10 text-primary"
-                  : "border-border text-muted-foreground hover:border-primary/40 hover:text-primary hover:bg-primary/5",
-              )}
-            >
-              Công việc
-            </Link>
-          </>
-        ) : (
-          <>
-            <button className="px-3 h-7 rounded-full border border-dashed border-border text-[12px] flex items-center gap-1.5 text-muted-foreground hover:bg-muted transition-colors">
-              <BrainCircuit size={11} />
-              Deep Think: on
-            </button>
-            <button className="px-3 h-7 rounded-full border border-dashed border-border text-[12px] flex items-center gap-1.5 text-muted-foreground hover:bg-muted transition-colors">
-              <Bot size={11} />
-              Agent
-            </button>
-          </>
-        )}
-        <span className="text-[10px] text-muted-foreground ml-auto hidden sm:block select-none">
-          ↵ gửi · ⇧↵ xuống dòng
-        </span>
       </div>
     </div>
-  );
+  )
+}
+
+function ToolButton({
+  children,
+  onClick,
+  disabled,
+  variant = 'plain',
+  active,
+}: {
+  children: React.ReactNode
+  onClick?: () => void
+  disabled?: boolean
+  variant?: 'plain' | 'outlined'
+  active?: boolean
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      disabled={disabled}
+      className={cn(
+        'size-6 rounded-lg inline-flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors',
+        variant === 'outlined' && 'border border-border bg-background shadow-xs',
+        active && 'bg-muted text-foreground',
+        disabled && 'opacity-50 cursor-not-allowed',
+      )}
+    >
+      {children}
+    </button>
+  )
+}
+
+function FileChips({ files, onRemove }: { files: File[]; onRemove: (i: number) => void }) {
+  const indexed = files.map((file, idx) => ({ file, idx }))
+  const images = indexed.filter(({ file }) => file.type.startsWith('image/'))
+  const others = indexed.filter(({ file }) => !file.type.startsWith('image/'))
+
+  return (
+    <div className="px-3 pt-3 pb-1.5 flex flex-col gap-2.5">
+      {images.length > 0 && (
+        <div className="flex flex-wrap gap-2.5">
+          {images.map(({ file, idx }) => (
+            <ImageThumb key={`${file.name}-${idx}`} file={file} onRemove={() => onRemove(idx)} />
+          ))}
+        </div>
+      )}
+      {others.length > 0 && (
+        <div className="flex flex-wrap gap-2.5">
+          {others.map(({ file, idx }) => (
+            <FileChip key={`${file.name}-${idx}`} file={file} onRemove={() => onRemove(idx)} />
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
+
+function ImageThumb({ file, onRemove }: { file: File; onRemove: () => void }) {
+  const url = useObjectUrl(file)
+  return (
+    <div className="group relative size-24 rounded-lg overflow-hidden border border-border bg-muted">
+      {url && (
+        <img src={url} alt={file.name} className="absolute inset-0 size-full object-cover" />
+      )}
+      <button
+        type="button"
+        onClick={onRemove}
+        aria-label="Xoá file"
+        className="absolute top-1 right-1 size-5 rounded-full bg-background/80 backdrop-blur-sm text-foreground opacity-0 group-hover:opacity-100 inline-flex items-center justify-center transition-opacity"
+      >
+        <X size={12} />
+      </button>
+    </div>
+  )
+}
+
+function FileChip({ file, onRemove }: { file: File; onRemove: () => void }) {
+  const Icon = getFileIcon(file)
+  return (
+    <div className="group relative h-9 inline-flex items-center gap-1.5 pl-2.5 pr-2.5 rounded-lg border border-border bg-background">
+      <Icon size={16} className="shrink-0 text-muted-foreground" />
+      <span className="text-sm font-medium leading-5 text-muted-foreground whitespace-nowrap max-w-[180px] truncate">
+        {file.name}
+      </span>
+      <button
+        type="button"
+        onClick={onRemove}
+        aria-label="Xoá file"
+        className="ml-0.5 size-4 rounded-full bg-muted hover:bg-foreground/15 inline-flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+      >
+        <X size={10} />
+      </button>
+    </div>
+  )
+}
+
+function getFileIcon(file: File): LucideIcon {
+  if (file.type.startsWith('audio/')) return Music2
+  if (file.type === 'application/pdf' || file.type.startsWith('text/') || /\.(md|txt|doc|docx)$/i.test(file.name))
+    return FileText
+  return File
+}
+
+function useObjectUrl(file: File): string | null {
+  const [url, setUrl] = useState<string | null>(null)
+  useEffect(() => {
+    const u = URL.createObjectURL(file)
+    setUrl(u)
+    return () => URL.revokeObjectURL(u)
+  }, [file])
+  return url
 }

@@ -10,10 +10,6 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TasksRouteImport } from './routes/tasks'
-import { Route as MenuRouteImport } from './routes/menu'
-import { Route as Conversation2RouteImport } from './routes/conversation-2'
-import { Route as ConversationRouteImport } from './routes/conversation'
-import { Route as AppsRouteImport } from './routes/apps'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ChatIndexRouteImport } from './routes/chat/index'
 import { Route as ChatChatIdRouteImport } from './routes/chat/$chatId'
@@ -21,26 +17,6 @@ import { Route as ChatChatIdRouteImport } from './routes/chat/$chatId'
 const TasksRoute = TasksRouteImport.update({
   id: '/tasks',
   path: '/tasks',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const MenuRoute = MenuRouteImport.update({
-  id: '/menu',
-  path: '/menu',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const Conversation2Route = Conversation2RouteImport.update({
-  id: '/conversation-2',
-  path: '/conversation-2',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ConversationRoute = ConversationRouteImport.update({
-  id: '/conversation',
-  path: '/conversation',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AppsRoute = AppsRouteImport.update({
-  id: '/apps',
-  path: '/apps',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -61,20 +37,12 @@ const ChatChatIdRoute = ChatChatIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/apps': typeof AppsRoute
-  '/conversation': typeof ConversationRoute
-  '/conversation-2': typeof Conversation2Route
-  '/menu': typeof MenuRoute
   '/tasks': typeof TasksRoute
   '/chat/$chatId': typeof ChatChatIdRoute
   '/chat/': typeof ChatIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/apps': typeof AppsRoute
-  '/conversation': typeof ConversationRoute
-  '/conversation-2': typeof Conversation2Route
-  '/menu': typeof MenuRoute
   '/tasks': typeof TasksRoute
   '/chat/$chatId': typeof ChatChatIdRoute
   '/chat': typeof ChatIndexRoute
@@ -82,53 +50,20 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/apps': typeof AppsRoute
-  '/conversation': typeof ConversationRoute
-  '/conversation-2': typeof Conversation2Route
-  '/menu': typeof MenuRoute
   '/tasks': typeof TasksRoute
   '/chat/$chatId': typeof ChatChatIdRoute
   '/chat/': typeof ChatIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths:
-    | '/'
-    | '/apps'
-    | '/conversation'
-    | '/conversation-2'
-    | '/menu'
-    | '/tasks'
-    | '/chat/$chatId'
-    | '/chat/'
+  fullPaths: '/' | '/tasks' | '/chat/$chatId' | '/chat/'
   fileRoutesByTo: FileRoutesByTo
-  to:
-    | '/'
-    | '/apps'
-    | '/conversation'
-    | '/conversation-2'
-    | '/menu'
-    | '/tasks'
-    | '/chat/$chatId'
-    | '/chat'
-  id:
-    | '__root__'
-    | '/'
-    | '/apps'
-    | '/conversation'
-    | '/conversation-2'
-    | '/menu'
-    | '/tasks'
-    | '/chat/$chatId'
-    | '/chat/'
+  to: '/' | '/tasks' | '/chat/$chatId' | '/chat'
+  id: '__root__' | '/' | '/tasks' | '/chat/$chatId' | '/chat/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AppsRoute: typeof AppsRoute
-  ConversationRoute: typeof ConversationRoute
-  Conversation2Route: typeof Conversation2Route
-  MenuRoute: typeof MenuRoute
   TasksRoute: typeof TasksRoute
   ChatChatIdRoute: typeof ChatChatIdRoute
   ChatIndexRoute: typeof ChatIndexRoute
@@ -141,34 +76,6 @@ declare module '@tanstack/react-router' {
       path: '/tasks'
       fullPath: '/tasks'
       preLoaderRoute: typeof TasksRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/menu': {
-      id: '/menu'
-      path: '/menu'
-      fullPath: '/menu'
-      preLoaderRoute: typeof MenuRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/conversation-2': {
-      id: '/conversation-2'
-      path: '/conversation-2'
-      fullPath: '/conversation-2'
-      preLoaderRoute: typeof Conversation2RouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/conversation': {
-      id: '/conversation'
-      path: '/conversation'
-      fullPath: '/conversation'
-      preLoaderRoute: typeof ConversationRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/apps': {
-      id: '/apps'
-      path: '/apps'
-      fullPath: '/apps'
-      preLoaderRoute: typeof AppsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -197,10 +104,6 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AppsRoute: AppsRoute,
-  ConversationRoute: ConversationRoute,
-  Conversation2Route: Conversation2Route,
-  MenuRoute: MenuRoute,
   TasksRoute: TasksRoute,
   ChatChatIdRoute: ChatChatIdRoute,
   ChatIndexRoute: ChatIndexRoute,

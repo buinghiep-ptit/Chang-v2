@@ -6,6 +6,7 @@ import { ChangTopBar } from '@/components/chang/top-bar'
 import { MessageBubble, ThinkingBubble } from '@/components/chang/message-bubble'
 import { useChatStore } from '@/store/chat-store'
 import { useChatStream } from '@/hooks/use-chat-stream'
+import { useDrawer } from '@/components/layout/app-layout'
 
 interface ChatMobileProps {
   chatId: string
@@ -13,6 +14,7 @@ interface ChatMobileProps {
 
 export function ChatMobile({ chatId }: ChatMobileProps) {
   const navigate = useNavigate()
+  const { openDrawer } = useDrawer()
   const conversations = useChatStore((s) => s.conversations)
   const addUserMsg = useChatStore((s) => s.addUserMsg)
   const conv = conversations.find((c) => c.id === chatId)
@@ -48,7 +50,8 @@ export function ChatMobile({ chatId }: ChatMobileProps) {
     <>
       <ChangTopBar
         title={conv.title.length > 24 ? conv.title.slice(0, 24) + '…' : conv.title}
-        onBack={() => navigate({ to: '/' })}
+        onMenu={openDrawer}
+        onPlus={() => navigate({ to: '/' })}
       />
 
       <div className="flex-1 overflow-y-auto px-3 py-3 flex flex-col gap-3 no-scrollbar md:px-6 md:max-w-2xl md:mx-auto md:w-full">
@@ -70,7 +73,7 @@ export function ChatMobile({ chatId }: ChatMobileProps) {
       </div>
 
       <div className="md:max-w-2xl md:mx-auto md:w-full">
-        <ChangComposer tabs onSend={handleSend} disabled={isDisabled} />
+        <ChangComposer onSend={handleSend} disabled={isDisabled} />
       </div>
     </>
   )

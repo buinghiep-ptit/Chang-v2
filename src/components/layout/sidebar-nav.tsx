@@ -1,202 +1,191 @@
 import { useState } from 'react'
 import { Link, useNavigate, useRouterState } from '@tanstack/react-router'
+import { AnimatePresence } from 'framer-motion'
 import {
   Bot,
-  ChevronDown,
+  Briefcase,
+  ChevronRight,
+  ChevronsUpDown,
+  Code,
+  DollarSign,
   Ellipsis,
-  FolderOpen,
-  Grid2x2,
-  Home,
-  ListTodo,
-  MessageCirclePlus,
-  Moon,
-  Pin,
-  Sun,
-  User,
+  Frame,
+  History,
+  Shapes,
+  Users,
+  GitBranch,
 } from 'lucide-react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { useTheme } from 'next-themes'
-import { nanoid } from 'nanoid'
 import { Mascot } from '@/components/chang/mascot'
-import { useChatStore, getChangResponse } from '@/store/chat-store'
+import { AppSwitcherDropdown } from '@/components/chang/app-switcher-dropdown'
+import { UserMenuDropdown } from '@/components/chang/user-menu-dropdown'
+import { useChatStore } from '@/store/chat-store'
 import { cn } from '@/lib/utils'
 
-type NavItem = { to: string; icon: typeof Home; label: string }
-
-const NAV_ITEMS: NavItem[] = [
-  { to: '/', icon: Home, label: 'Trang chủ' },
-  { to: '/apps', icon: Grid2x2, label: 'Ứng dụng' },
-  { to: '/tasks', icon: ListTodo, label: 'Công việc' },
-]
-
 export function SidebarNav() {
-  const conversations = useChatStore((s) => s.conversations)
-  const createConversation = useChatStore((s) => s.createConversation)
-  const addChangMsg = useChatStore((s) => s.addChangMsg)
   const { location } = useRouterState()
   const navigate = useNavigate()
-  const { resolvedTheme, setTheme } = useTheme()
-  const [collapsed, setCollapsed] = useState<Set<string>>(new Set())
+  const conversations = useChatStore((s) => s.conversations)
+  const [appSwitcherOpen, setAppSwitcherOpen] = useState(false)
+  const [userMenuOpen, setUserMenuOpen] = useState(false)
 
-  function toggleGroup(group: string) {
-    setCollapsed(prev => {
-      const next = new Set(prev)
-      next.has(group) ? next.delete(group) : next.add(group)
-      return next
-    })
+  function openConversation() {
+    const latest = conversations[0]
+    if (latest) navigate({ to: '/chat/$chatId', params: { chatId: latest.id } })
   }
 
-  function newChat() {
-    const id = nanoid(8)
-    createConversation(id, 'Xin chào Chang!')
-    setTimeout(() => {
-      const res = getChangResponse('hello')
-      addChangMsg(id, res.content)
-    }, 1200)
-    navigate({ to: '/chat/$chatId', params: { chatId: id } })
-  }
-
-  const grouped = conversations.reduce<Record<string, typeof conversations>>(
-    (acc, c) => { const k = c.group ?? '__none__'; (acc[k] ??= []).push(c); return acc },
-    {},
-  )
+  const isTasks = location.pathname === '/tasks'
+  const isHome = location.pathname === '/'
 
   return (
-    <div className="flex flex-col h-full">
-      {/* Brand header */}
-      <div className="h-14 px-4 flex items-center gap-3 border-b border-border shrink-0">
-        <div className="w-8 h-8 rounded-lg bg-info/10 flex items-center justify-center overflow-hidden">
-          <Mascot size={24} />
-        </div>
-        <span className="font-semibold text-[15px] flex-1">Chang</span>
+    <div className="flex flex-col h-full w-full bg-sidebar text-sidebar-foreground">
+      {/* Header */}
+      <div className="relative shrink-0">
         <button
-          onClick={() => setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')}
-          className="w-8 h-8 rounded-md flex items-center justify-center text-muted-foreground hover:bg-muted transition-colors"
+          type="button"
+          onClick={() => setAppSwitcherOpen((v) => !v)}
+          className="w-full p-2 flex items-center gap-2 hover:bg-sidebar-accent/60 transition-colors text-left"
         >
-          {resolvedTheme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
-        </button>
-      </div>
-
-      {/* New chat CTA */}
-      <div className="px-3 pt-3 pb-2 shrink-0">
-        <button
-          onClick={newChat}
-          className="w-full rounded-xl border border-info/30 bg-info/5 py-2.5 flex items-center justify-center gap-2 text-info font-medium text-[13px] hover:bg-info/10 transition-colors"
-        >
-          <MessageCirclePlus size={15} />Cuộc trò chuyện mới
-        </button>
-      </div>
-
-      {/* Main nav */}
-      <div className="px-3 pb-2 flex flex-col gap-0.5 border-b border-border shrink-0">
-        {NAV_ITEMS.map(({ to, icon: Icon, label }) => {
-          const active = to === '/' ? location.pathname === '/' : location.pathname.startsWith(to)
-          return (
-            <Link key={to} to={to as '/'}
-              className={cn(
-                'flex items-center gap-3 px-3 py-2 rounded-lg text-[14px] font-medium transition-colors',
-                active ? 'bg-primary/10 text-primary' : 'text-muted-foreground hover:bg-muted hover:text-foreground',
-              )}
-            >
-              <Icon size={16} />{label}
-            </Link>
-          )
-        })}
-      </div>
-
-      {/* Assistants */}
-      <div className="px-3 py-2 flex flex-col gap-0.5 border-b border-border shrink-0">
-        <div className="flex items-center justify-between px-2 py-1.5">
-          <div className="flex items-center gap-2 text-[12px] text-muted-foreground uppercase tracking-wider font-medium">
-            <Bot size={13} />Trợ lý
+          <Link
+            to="/"
+            onClick={(e) => e.stopPropagation()}
+            className="size-8 rounded-lg bg-sidebar-primary text-sidebar-primary-foreground inline-flex items-center justify-center overflow-hidden"
+            aria-label="Chang"
+          >
+            <Mascot size={20} className="invert" />
+          </Link>
+          <div className="flex-1 min-w-0 flex flex-col">
+            <span className="text-sm font-bold leading-5 truncate">Chang</span>
+            <span className="text-xs leading-4 text-sidebar-foreground/70 truncate">
+              Digital Workforce
+            </span>
           </div>
-          <Ellipsis size={14} className="text-muted-foreground" />
-        </div>
-        <button className="flex items-center gap-2.5 px-3 py-2 rounded-lg bg-muted text-[13px] text-left">
-          <div className="w-6 h-6 rounded-full bg-primary/15 flex items-center justify-center shrink-0">
-            <Bot size={12} className="text-primary" />
-          </div>Chang Bít Tất
+          <span className="size-6 rounded-md inline-flex items-center justify-center text-sidebar-foreground/70">
+            <ChevronsUpDown size={16} />
+          </span>
         </button>
-      </div>
-
-      {/* Conversations */}
-      <div className="flex-1 overflow-y-auto px-3 py-2 flex flex-col gap-0.5 no-scrollbar">
-        <div className="px-2 py-1 text-[11px] text-muted-foreground font-semibold uppercase tracking-wider">
-          Cuộc trò chuyện
-        </div>
-
-        {Object.entries(grouped).map(([group, convs]) =>
-          group === '__none__' ? (
-            convs.map(c => (
-              <ConvItem key={c.id} title={c.title}
-                active={location.pathname === `/chat/${c.id}`}
-                onClick={() => navigate({ to: '/chat/$chatId', params: { chatId: c.id } })} />
-            ))
-          ) : (
-            <div key={group}>
-              <button
-                onClick={() => toggleGroup(group)}
-                className="w-full flex items-center gap-2 px-2 py-1.5 text-[13px] text-muted-foreground hover:text-foreground transition-colors"
-              >
-                <FolderOpen size={13} />
-                <span className="flex-1 text-left truncate">{group}</span>
-                <ChevronDown
-                  size={13}
-                  className={cn(
-                    'transition-transform duration-200 shrink-0',
-                    collapsed.has(group) && '-rotate-90',
-                  )}
-                />
-              </button>
-              <AnimatePresence initial={false}>
-                {!collapsed.has(group) && (
-                  <motion.div
-                    key={group + '-items'}
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: 'auto', opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
-                    className="overflow-hidden"
-                  >
-                    {convs.map(c => (
-                      <ConvItem key={c.id} title={c.title} indent
-                        active={location.pathname === `/chat/${c.id}`}
-                        onClick={() => navigate({ to: '/chat/$chatId', params: { chatId: c.id } })} />
-                    ))}
-                  </motion.div>
-                )}
-              </AnimatePresence>
+        <AnimatePresence>
+          {appSwitcherOpen && (
+            <div className="absolute left-2 right-2 top-full mt-1 z-50">
+              <AppSwitcherDropdown onClose={() => setAppSwitcherOpen(false)} className="w-full" />
             </div>
-          ),
-        )}
+          )}
+        </AnimatePresence>
       </div>
 
-      {/* User footer */}
-      <div className="h-14 px-4 flex items-center gap-3 border-t border-border shrink-0">
-        <div className="w-8 h-8 rounded-full bg-muted-foreground/20 flex items-center justify-center">
-          <User size={16} className="text-muted-foreground" />
-        </div>
-        <div className="flex-1 min-w-0">
-          <div className="text-[13px] font-medium truncate">Phong NT31</div>
-          <div className="text-[11px] text-muted-foreground">FTEL · Nhân sự</div>
-        </div>
+      {/* Group: Chức năng */}
+      <Group label="Chức năng">
+        <MenuItem icon={Bot} label="Quản lý Nhân sự số" active={isHome} onClick={() => navigate({ to: '/' })} />
+        <MenuItem icon={Briefcase} label="Công việc" badge="9" active={isTasks} onClick={() => navigate({ to: '/tasks' })} />
+        <MenuItem icon={Shapes} label="Ứng dụng" />
+        <MenuItem icon={History} label="Lịch sử hội thoại" onClick={openConversation} />
+      </Group>
+
+      {/* Group: Nhân sự số */}
+      <Group label="Nhân sự số">
+        <MenuItem icon={Frame} label="Chang" highlight onClick={openConversation} />
+      </Group>
+
+      {/* Group: Chuyên gia */}
+      <Group label="Chuyên gia" className="flex-1 min-h-0">
+        <MenuItem icon={Users} label="FHR" muted />
+        <MenuItem icon={GitBranch} label="FTQ" muted />
+        <MenuItem icon={DollarSign} label="FIM" muted />
+        <MenuItem icon={Code} label="DSC" muted />
+        <MenuItem icon={Ellipsis} label="Xem thêm" muted />
+      </Group>
+
+      {/* Footer */}
+      <div className="relative shrink-0">
+        <button
+          type="button"
+          onClick={() => setUserMenuOpen((v) => !v)}
+          className="w-full p-2 flex items-center gap-2 hover:bg-sidebar-accent/60 transition-colors text-left"
+        >
+          <div className="size-8 rounded-lg bg-sidebar-primary text-sidebar-primary-foreground inline-flex items-center justify-center text-xs font-medium">
+            PT
+          </div>
+          <div className="flex-1 min-w-0">
+            <div className="text-sm font-bold leading-5 truncate">Nguyễn Tuấn Phong</div>
+            <div className="text-xs leading-4 text-sidebar-foreground/70 truncate">
+              phongnt31@fpt.com
+            </div>
+          </div>
+          <span className="size-6 rounded-md inline-flex items-center justify-center text-sidebar-foreground/70">
+            <ChevronsUpDown size={16} />
+          </span>
+        </button>
+        <AnimatePresence>
+          {userMenuOpen && (
+            <div className="absolute left-2 right-2 bottom-full mb-1 z-50">
+              <UserMenuDropdown onClose={() => setUserMenuOpen(false)} className="w-full" />
+            </div>
+          )}
+        </AnimatePresence>
       </div>
     </div>
   )
 }
 
-function ConvItem({ title, indent, active, onClick, pinned }: {
-  title: string; indent?: boolean; active: boolean; onClick: () => void; pinned?: boolean
+function Group({
+  label,
+  children,
+  className,
+}: {
+  label: string
+  children: React.ReactNode
+  className?: string
 }) {
   return (
-    <button onClick={onClick}
+    <div className={cn('p-2 flex flex-col gap-0.5', className)}>
+      <div className="h-8 px-2 flex items-center text-xs leading-4 text-sidebar-foreground/70">
+        {label}
+      </div>
+      {children}
+    </div>
+  )
+}
+
+interface MenuItemProps {
+  icon: React.ComponentType<{ size?: number; className?: string }>
+  label: string
+  badge?: string
+  active?: boolean
+  highlight?: boolean
+  muted?: boolean
+  onClick?: () => void
+}
+
+function MenuItem({
+  icon: Icon,
+  label,
+  badge,
+  active,
+  highlight,
+  muted,
+  onClick,
+}: MenuItemProps) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
       className={cn(
-        'w-full flex items-center gap-2 px-3 py-1.5 rounded-lg text-[13px] text-left transition-colors',
-        indent && 'pl-7',
-        active ? 'bg-primary/10 text-primary' : 'text-muted-foreground hover:bg-muted hover:text-foreground',
-      )}>
-      <span className="flex-1 truncate">{title}</span>
-      {pinned && <Pin size={11} />}
+        'h-8 px-2 gap-2 rounded-lg w-full flex items-center text-sm transition-colors',
+        highlight && 'bg-sidebar-primary text-sidebar-primary-foreground pr-2',
+        !highlight && active && 'bg-sidebar-accent text-sidebar-accent-foreground',
+        !highlight && !active && 'text-sidebar-foreground hover:bg-sidebar-accent',
+        muted && !active && 'opacity-80',
+      )}
+    >
+      <Icon size={16} className="shrink-0" />
+      <span className="flex-1 text-left truncate">{label}</span>
+      {badge && (
+        <span className="min-w-5 h-5 px-1.5 rounded-lg bg-sidebar-primary text-sidebar-primary-foreground text-xs font-medium inline-flex items-center justify-center">
+          {badge}
+        </span>
+      )}
+      {!highlight && !badge && (
+        <ChevronRight size={14} className="shrink-0 text-sidebar-foreground/50" />
+      )}
     </button>
   )
 }

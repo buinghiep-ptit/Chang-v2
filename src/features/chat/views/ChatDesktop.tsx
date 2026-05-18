@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react'
 import { useNavigate } from '@tanstack/react-router'
 import { AnimatePresence } from 'framer-motion'
 import { ChangComposer } from '@/components/chang/composer'
+import { ChangTopBar } from '@/components/chang/top-bar'
 import { MessageBubble, ThinkingBubble } from '@/components/chang/message-bubble'
 import { useChatStore } from '@/store/chat-store'
 import { useChatStream } from '@/hooks/use-chat-stream'
@@ -51,11 +52,11 @@ export function ChatDesktop({ chatId }: ChatDesktopProps) {
 
   return (
     <>
-      <div className="h-14 px-6 flex items-center gap-3 border-b border-border shrink-0">
-        <h2 className="font-semibold text-[15px] truncate flex-1">
-          {conv.title}
-        </h2>
-      </div>
+      <ChangTopBar
+        variant="desktop"
+        title={conv.title}
+        notificationCount={9}
+      />
 
       <div className="flex-1 overflow-y-auto px-6 py-4 flex flex-col gap-3 no-scrollbar max-w-3xl w-full mx-auto">
         <AnimatePresence initial={false}>
@@ -76,7 +77,7 @@ export function ChatDesktop({ chatId }: ChatDesktopProps) {
       </div>
 
       <div className="px-6 pb-6 max-w-3xl w-full mx-auto">
-        <ChangComposer tabs onSend={handleSend} disabled={isDisabled} />
+        <ChangComposer onSend={handleSend} disabled={isDisabled} />
       </div>
     </>
   )

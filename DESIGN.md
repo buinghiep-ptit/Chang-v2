@@ -1,514 +1,410 @@
 ---
-name: Chang SDK Mini App — Design System v1
-theme: Violet / Minimal Clean
-modes: light + dark
-font: Inter Variable
-colors:
-  # ── Light ──────────────────────────────────────────────────────
-  background:           "hsl(0 0% 100%)"
-  foreground:           "hsl(240 10% 4%)"
-  card:                 "hsl(0 0% 100%)"
-  card-foreground:      "hsl(240 10% 4%)"
-  primary:              "hsl(262 83% 58%)"    # Violet 600
-  primary-foreground:   "hsl(0 0% 100%)"
-  secondary:            "hsl(240 5% 96%)"
-  secondary-foreground: "hsl(240 6% 10%)"
-  muted:                "hsl(240 5% 96%)"
-  muted-foreground:     "hsl(240 4% 46%)"
-  accent:               "hsl(240 5% 96%)"
-  border:               "hsl(240 6% 90%)"
-  ring:                 "hsl(262 83% 58%)"
-  destructive:          "hsl(0 84% 60%)"
-  success:              "hsl(142 71% 45%)"
-  warning:              "hsl(38 92% 50%)"
-  info:                 "hsl(200 95% 50%)"
-  # ── Dark ───────────────────────────────────────────────────────
-  dark-background:      "hsl(240 10% 4%)"
-  dark-foreground:      "hsl(0 0% 98%)"
-  dark-card:            "hsl(240 8% 7%)"
-  dark-primary:         "hsl(258 90% 70%)"
-  dark-muted:           "hsl(240 6% 14%)"
-  dark-muted-foreground: "hsl(240 5% 65%)"
-  dark-border:          "hsl(240 6% 18%)"
-  # ── Chart palette ─────────────────────────────────────────────
-  chart-1:  "hsl(262 83% 58%)"   # violet
-  chart-2:  "hsl(199 89% 48%)"   # sky blue
-  chart-3:  "hsl(38 92% 50%)"    # amber
-  chart-4:  "hsl(142 71% 45%)"   # green
-  chart-5:  "hsl(330 81% 60%)"   # pink
-  chart-6:  "hsl(173 80% 40%)"   # teal
+name: Chang DW — Design System (Figma 1:1)
+source: Figma file 88clbXS7r4F3uNNHCNaXO9 — "Chang DW | UX UI | 2026"
+theme: Zinc / Shadcn default (light)
+font:
+  primary: Noto Sans Variable
+  mono:    JetBrains Mono (chỉ dùng cho placeholder @agent · /skill trong Composer)
 radius:
-  sm:    "0.5rem"   # 8px
-  md:    "0.75rem"  # 12px
-  lg:    "1rem"     # 16px  — cards, panels
-  xl:    "1.25rem"  # 20px  — chips, inputs, action buttons
-  2xl:   "1.5rem"   # 24px  — chat bubbles
-  shell: "2.5rem"   # 40px  — device frame (tablet+)
-spacing:
-  container-x-mobile:   "12px"  # px-3
-  container-x-desktop:  "24px"  # px-6
-  card-padding:         "12px"  # p-3
-  section-gap:          "16px"  # gap-4
-  item-gap:             "8px"   # gap-2
+  lg:   "10px"     # ⚠️ TOÀN HỆ THỐNG dùng radius này
+  full: "9999px"   # avatar mascot, badge số đếm
+colors-light:
+  background:           "#ffffff"
+  foreground:           "#0a0a0a"
+  card:                 "#ffffff"
+  card-foreground:      "#0a0a0a"
+  primary:              "#171717"
+  primary-foreground:   "#fafafa"
+  secondary:            "#f5f5f5"
+  secondary-foreground: "#171717"
+  muted:                "#f5f5f5"
+  muted-foreground:     "#737373"
+  accent:               "#f5f5f5"
+  border:               "#e5e5e5"
+  input:                "#e5e5e5"
+  ring:                 "#a1a1a1"
+  destructive:          "#e7000b"
+  destructive-foreground: "rgba(255,255,255,0.95)"
+  sidebar:              "#fafafa"
+  sidebar-foreground:   "#0a0a0a"
+  sidebar-primary:      "#171717"
+  sidebar-border:       "#e5e5e5"
 shadows:
-  xs: "0 1px 2px hsl(240 6% 10% / 0.05)"
-  sm: "0 1px 3px hsl(240 6% 10% / 0.06), 0 1px 2px hsl(240 6% 10% / 0.04)"
-  md: "0 4px 12px hsl(240 6% 10% / 0.08), 0 2px 4px hsl(240 6% 10% / 0.04)"
-  lg: "0 12px 32px hsl(240 6% 10% / 0.12), 0 4px 8px hsl(240 6% 10% / 0.06)"
-  xl: "0 24px 64px hsl(240 6% 10% / 0.18), 0 8px 16px hsl(240 6% 10% / 0.08)"
-motion:
-  ease-out:    "cubic-bezier(0.16, 1, 0.3, 1)"
-  ease-in-out: "cubic-bezier(0.65, 0, 0.35, 1)"
-  ease-spring: "cubic-bezier(0.34, 1.56, 0.64, 1)"
-  fast:   "150ms"
-  normal: "200ms"
-  panel:  "220ms"
+  xs:          "0 1px 2px 0 rgba(0,0,0,0.10)"
+  focus-ring:  "0 0 0 3px rgba(161,161,161,0.5)"
 ---
 
-## Brand & Personality
-
-Chang SDK Mini App là giao diện trợ lý AI nội bộ cho nhân viên FPT Telecom. Tính cách thiết kế là **tin tưởng, rõ ràng, và nhẹ nhàng** — không phô trương, không phân tâm, luôn đưa thông tin lên trước.
-
-Phương trình cốt lõi: **nội dung > chrome**. Mọi quyết định về màu, khoảng trống, và hiệu ứng đều phục vụ cho việc giúp người dùng hoàn thành công việc nhanh hơn, không phải để gây ấn tượng về giao diện.
+> **Document này phản ánh Figma 1:1.** Code repo hiện đang ở theme khác (Inter + Violet). Việc refactor code để khớp Figma có **plan riêng** — không thuộc phạm vi file này.
 
 ---
 
-## Colors
+## 1. Tokens
 
-### Chiến lược
+### 1.1 Color (light)
 
-Hệ màu xây dựng trên **một accent duy nhất — Violet 600** (`hsl(262 83% 58%)`). Tất cả màu khác trong UI đều trung tính; chỉ violet mang ý nghĩa: focus state, active tab, primary action, hover signal.
+Figma chỉ export light theme. Dark theme **chưa có** trong file thiết kế — sẽ bổ sung khi Figma có biến `dark`.
 
-**Quy tắc token:**
-- Không dùng hex trực tiếp trong component. Luôn dùng `bg-primary`, `text-muted-foreground`, `hsl(var(--chart-N))`, v.v.
-- **Chart palette** (`chart-1…6`) chỉ dùng cho icon tiles trong list items. Mỗi màu đại diện một danh mục chức năng, không dùng tùy tiện cho decoration.
-- **Status colors** (`success`, `warning`, `info`, `destructive`) chỉ dùng đúng ngữ nghĩa — không làm màu brand phụ.
+| Token | Hex | Dùng cho |
+| --- | --- | --- |
+| `--background` | `#ffffff` | Nền page, card, input, outline button |
+| `--foreground` | `#0a0a0a` | Text mặc định, ghost/outline button label |
+| `--card` | `#ffffff` | Card surface |
+| `--card-foreground` | `#0a0a0a` | Heading trong card |
+| `--primary` | `#171717` | Primary button bg, badge default, switch ON, link text |
+| `--primary-foreground` | `#fafafa` | Text trên `--primary` |
+| `--secondary` | `#f5f5f5` | Secondary button bg, badge secondary |
+| `--secondary-foreground` | `#171717` | Text trên `--secondary` |
+| `--muted` | `#f5f5f5` | Item muted bg, conversation page bg |
+| `--muted-foreground` | `#737373` | Placeholder, breadcrumb mid, subtitle |
+| `--accent` | `#f5f5f5` | TopBar action button bg |
+| `--border` | `#e5e5e5` | Border outline + divider (1px) |
+| `--input` | `#e5e5e5` | Switch track OFF |
+| `--ring` | `#a1a1a1` | Focus ring border |
+| `--destructive` | `#e7000b` | Destructive button/badge bg |
+| `--destructive-foreground` | `rgba(255,255,255,.95)` | Text trên destructive |
+| `--sidebar` | `#fafafa` | Sidebar bg |
+| `--sidebar-foreground` | `#0a0a0a` | Sidebar text |
+| `--sidebar-primary` | `#171717` | Sidebar logo icon bg |
+| `--sidebar-border` | `#e5e5e5` | Sidebar border + sub-menu connector |
 
-### Dark mode
+### 1.2 Radius
 
-Dark mode đảo nghịch surface: `bg-background` từ white thành `hsl(240 10% 4%)`. Primary violet nhạt hơn trong dark (`hsl(258 90% 70%)`) để đảm bảo tương phản tối thiểu AA. `bg-card` và `bg-muted` chênh nhau rõ hơn để giữ phân cấp surface.
+| Token | Value | Dùng cho |
+| --- | --- | --- |
+| `--radius-lg` | `10px` | **Tất cả** button, badge, input, card, avatar vuông, item, switch track |
+| `--radius-full` | `9999px` | Agent avatar 128px, badge số đếm |
 
-Toggle theme qua `useTheme()` từ `next-themes`, đặt class `.dark` trên `<html>`. **Không tự viết `dark:` variant trong component** — mọi dark behavior đã được xử lý hoàn toàn trong CSS variable layer của `globals.css`.
+> ⚠️ Figma **không có** `--radius-sm/md/xl`. Toàn UI dùng một radius `10px`. Đây là khác biệt lớn so với phiên bản code hiện tại.
+
+### 1.3 Spacing
+
+Thang spacing theo tailwind scale, đơn vị `4px`. Token Figma đặt theo trục (`p-N`, `px-N`, `py-N`, `gap-N`, `space-x-N`, `mx-N`, ...). Khi build CSS có thể alias về một thang chung.
+
+| Token | px |
+| --- | --- |
+| `*-0.5` | 2 |
+| `*-1` | 4 |
+| `*-1.5` | 6 |
+| `*-2` | 8 |
+| `*-2.5` | 10 |
+| `*-3` | 12 |
+| `*-3.5` | 14 |
+| `*-4` | 16 |
+| `*-6` | 24 |
+| `*-8` | 32 |
+
+Opacity tokens hay gặp: `opacity-50` (disabled/loading), `opacity-70` (sidebar section label), `opacity-80` (button hover).
+
+### 1.4 Typography
+
+**Font chính:** `Noto Sans` variable (axes `CTGR`, `wdth`). Letter-spacing `--tracking/normal` = `0`.
+
+**Font phụ:** `JetBrains Mono` — chỉ dùng cho placeholder `@agent · /skill` trong Composer.
+
+| Token size | px | Token line-height | px |
+| --- | --- | --- | --- |
+| `--size/xs` | 12 | `--leading/4` | 16 |
+| `--size/sm` | 14 | `--leading/5` | 20 |
+| `--size/base` | 16 | `--leading/6` | 24 |
+| `--size/2xl` | 24 | `--leading/8` | 32 |
+
+| Weight token | Value |
+| --- | --- |
+| `--weight/light` | 300 |
+| `--weight/normal` | 400 |
+| `--weight/medium` | 500 |
+
+**Text style được đặt tên trong Figma:**
+
+| Style | Spec | Dùng cho |
+| --- | --- | --- |
+| `Text-xs/Regular` | 12 / 16 / 400 | Section label uppercase, divider label, sidebar email |
+| `Text-xs/Medium` | 12 / 16 / 500 | Badge text, badge số đếm |
+| `Text-sm/Regular` | 14 / 20 / 400 | Body, breadcrumb, sidebar menu, item sub-text |
+| `Text-sm/Medium` | 14 / 20 / 500 | Button label, item heading, chip label |
+| `Text-sm/Light` | 14 / 20 / 300 | Hero card subtitle ("Digital Workforce Platform") |
+| `Text-base/Regular` | 16 / 24 / 400 | Input value, composer placeholder |
+| `Text-2xl/Semi Bold` | 24 / 32 / 400 | Greeting title "Chang nèe" |
+
+### 1.5 Shadows
+
+| Token | Value | Áp cho |
+| --- | --- | --- |
+| `shadow-xs` | `0 1px 2px 0 rgba(0,0,0,0.10)` | Button (primary/secondary/destructive/outline/icon), Input, Chip, Card hero buttons, Composer |
+| `focus-ring` | `0 0 0 3px rgba(161,161,161,0.5)` | Input active, button focus |
+
+`shadow-xs` **không** áp lên: ghost button, link button, loading button.
 
 ---
 
-## Typography
+## 2. Components
 
-**Inter Variable** là font duy nhất. Sự thống nhất font tạo ra sự gọn gàng mà không cần thêm quy tắc.
+### 2.1 Avatar
 
-### Phân cấp thực tế
+| Variant | Size | Radius | Border |
+| --- | --- | --- | --- |
+| Circle (single) | 32 × 32 | `--radius-lg` | – |
+| Square | 32 × 32 | `--radius-lg` | – |
+| Group | 32 mỗi item, overlap −8px | `--radius-lg` | items 2+ có `1px var(--border)` |
+| Hero / mascot (Home) | 128 × 128 | `--radius-full` | `1px var(--background)` |
 
-| Tầng | Size | Weight | Tailwind class | Dùng khi |
-|---|---|---|---|---|
-| Page title | 20–24px | 600 | `text-xl font-semibold` | Welcome heading, page header |
-| Section | 16px | 600 | `text-base font-semibold` | Section label trong Apps, Tasks |
-| Body | 15px | 400 | `text-[15px]` | Tên app, tên task, chat message, list title |
-| Input | 14px | 400 | `text-[14px]` | Composer textarea |
-| Label | 13px | 400–500 | `text-[13px]` | Subtitle, chip text, metadata |
-| Hint | 12px | 400 | `text-[12px]` | Upload hint, keyboard hint |
-| Micro | 10px | 500 | `text-[10px] font-medium` | Bottom nav labels |
+### 2.2 Badge
 
-### Quy tắc chất lượng
+Chung: `h-22` (cao 22), padding `px-2.5 py-0.5` (10 / 2), `--radius-lg`, `Text-xs/Medium` (12 / 16 / 500), align center.
 
-- `font-semibold` (600) dùng cho tiêu đề, tên riêng, trạng thái quan trọng. **Không dùng `font-bold` (700)** — quá nặng với Inter Variable ở kích thước nhỏ.
-- `text-muted-foreground` cho mọi text phụ trợ — phân cấp visual mà không cần thêm màu mới.
-- `tracking-tight` chỉ dùng cho heading ≥ 18px.
-- `line-height`: body 15px dùng `leading-6` (24px); label 13px dùng `leading-snug` (giữ mật độ cao trong list).
+| Variant | bg | text | border |
+| --- | --- | --- | --- |
+| `default` | `--primary` | `--primary-foreground` | – |
+| `secondary` | `--secondary` | `--secondary-foreground` | – |
+| `destructive` | `--destructive` | `rgba(255,255,255,.95)` | – |
+| `outline` | transparent | `--foreground` | `1px var(--border)` |
+
+Variants phụ: `with icon` (16px lucide trước text), `number` (text-only ngắn).
+
+### 2.3 Breadcrumb
+
+- Container: `flex items-center gap-1.5` (6).
+- Item: `Text-sm/Regular`. Mid: `text-muted-foreground`. Current: `text-foreground`.
+- Separator: lucide `slash` 14 × 14.
+- Variants: dropdown, collapsed (`…`), link, responsive (ẩn item ở mobile).
+
+### 2.4 Button
+
+Chung: `Text-sm/Medium` (14 / 20 / 500), `--radius-lg`, padding theo size.
+
+| Size | Height | Padding | Icon-only |
+| --- | --- | --- | --- |
+| `small` | 32 | `px-3` | 32 × 32 |
+| `default` | 36 | `px-4 py-2` (16 / 8) | 36 × 36 |
+| `large` | 40 | `px-6` | 40 × 40 |
+
+Variant matrix:
+
+| Variant | bg | text | border | shadow |
+| --- | --- | --- | --- | --- |
+| `primary` | `--primary` | `--primary-foreground` | – | `shadow-xs` |
+| `secondary` | `--secondary` | `--secondary-foreground` | – | `shadow-xs` |
+| `destructive` | `--destructive` | `--destructive-foreground` | – | `shadow-xs` |
+| `outline` | `--background` | `--foreground` | `1px var(--border)` | `shadow-xs` |
+| `ghost` | transparent | `--foreground` | – | – |
+| `link` | transparent | `--primary` | – | – |
+| `icon` (icon-only) | `--background` | – | `1px var(--border)` | `shadow-xs` |
+| `loading` | `--background` | `--foreground` | `1px var(--border)` | – |
+
+**States:**
+
+- `hover` — toàn variant: `opacity-80` (theo cách Figma kit hiển thị state, kit dùng opacity layer thay vì shift màu).
+- `loading` — `h-32`, `gap-1.5` (6), `opacity-50`, spinner 14px lucide ở trước label.
+- `link` hover — gạch chân (`text-decoration: underline`).
+
+**Button group:** items chia bằng `border-r 1px var(--border)`, item inner `h-36`, wrapper có `shadow-xs`.
+
+### 2.5 Input
+
+| Property | Value |
+| --- | --- |
+| Height | 36 |
+| Padding | `px-3 py-1` (12 / 4) |
+| Radius | `--radius-lg` |
+| Font | `Text-base/Regular` (16 / 24 / 400) |
+| Placeholder | `--muted-foreground` |
+| BG | `--background` |
+| Width default | 320 |
+
+| State | border | extra |
+| --- | --- | --- |
+| `default` | `1px var(--border)` | `shadow-xs` |
+| `active` (focus) | `1px var(--ring)` | `focus-ring` shadow |
+| `disabled` | `1px var(--border)` | `shadow-xs` + `opacity-50` |
+
+Sub-variants: `File` (input file), `With Label`, `With Button` (composed input, w-426).
+
+### 2.6 Input Group
+
+Wrapper `h-36`, border `1px var(--border)`, `--radius-lg`, `shadow-xs`, bg `--background`, width default 344.
+
+Sub-types từ Figma: `Icon` (1–4 prefix/suffix), `Text` (prefix/suffix label), `Button` (input + appended button), `Tooltip`, `Textarea`, `Spinner`, `Label`, `Dropdown`, `Button Group`.
+
+Ví dụ — search input: icon prefix `lucide/search` 16 ở `pl-3 py-1.5`, body `flex-1 px-2 py-1`, trailing text `pr-3 py-1.5` `Text-sm/Medium` muted.
+
+### 2.7 Item
+
+Container: `gap-4` (16), `p-4` (16), `--radius-lg`, w-511 mặc định. Header + sub-text + trailing action.
+
+| Variant | bg | border |
+| --- | --- | --- |
+| `default` | transparent | – |
+| `outline` | transparent | `1px var(--border)` |
+| `muted` | `--muted` | – |
+
+| Size | Padding | Height |
+| --- | --- | --- |
+| `default` | `p-4` | 76 |
+| `sm` | nhỏ hơn | 44 |
+
+- Heading: `Text-sm/Medium` `--card-foreground`.
+- Sub-text: `Text-sm/Regular` `--muted-foreground`.
+- Trailing action: outline button `h-32 px-3 shadow-xs`.
+
+Sub-frames: `Icon`, `Avatar`, `Image`, `Group`, `Header`, `Link`, `Dropdown`.
+
+### 2.8 Sidebar
+
+Wrapper: bg `--sidebar`, border `1px var(--sidebar-border)`, `--radius-lg`, `h-608`.
+
+| State | Width | Bố cục |
+| --- | --- | --- |
+| `closed` | 48 | Icon-only menu, padding `p-2` |
+| `open` | 255 | Header (logo 32 + workspace + chevrons) → section labels → menu items → sub-menu |
+
+- Logo icon: 32 × 32, bg `--sidebar-primary`, `--radius-lg`, icon trắng 16.
+- Section label: `Text-xs/Regular` `--sidebar-foreground opacity-70`, height 32, `px-2`.
+- Menu button: `h-32 p-2 gap-2 --radius-lg`, text `Text-sm/Regular`.
+- Sub menu: `px-3.5` (14), wrapper có `border-l 1px var(--sidebar-border)` (timeline visual), items `h-28 px-2`.
+- Footer: avatar 32 + tên `Text-sm/Regular` + email `Text-xs/Regular`.
+
+### 2.9 Switch
+
+Track `w-44 h-24`, `--radius-lg`. Thumb 20 × 20, `--radius-lg`.
+
+| State | track bg | thumb bg | thumb position |
+| --- | --- | --- | --- |
+| `off` | `--input` `#e5e5e5` | `--background` | `left-2 top-2` |
+| `on`  | `--primary` `#171717` | `--primary-foreground` | `left-22 top-2` |
+
+Label kèm bên phải: `ml-2` (8), `Text-sm/Medium` `--foreground`.
 
 ---
 
-## Layout & Spacing
+## 3. App Patterns (Chang screens)
 
-### Mobile-first shell
+### 3.1 TopBar — Mobile
 
-`MobileShell` (`src/components/layout/mobile-shell.tsx`) là wrapper duy nhất quản lý kích thước:
+- `h-64`, bg `--background`, `border-bottom 1px var(--border)`, width full (375 mobile).
+- Padding `px-4` trái, `px-3` phải.
+- Left (gap-2): menu icon 16 trong `28 × 28 px-2`, app icon 16, breadcrumb "Chang › ..." (`Text-sm/Regular`).
+- Right (gap-2): plus icon `28 × 28 px-2`; bell + badge tròn `14 × 14` absolute top-right (bg `--primary`, text 10 `Text-xs/Medium` `--primary-foreground`); ellipsis `28 × 28` `--radius-lg` bg `--accent`.
 
-- **Mobile** (`< md`): `w-full h-dvh` — full screen. Dùng `dvh` thay vì `vh` để tránh layout shift do thanh địa chỉ browser di động.
-- **Tablet+** (`≥ md`): card cố định `390 × 844px`, `rounded-[2.5rem]`, `shadow-xl`, canh giữa màn hình với `md:p-6 lg:p-10`. Outer stage: `bg-muted`.
+### 3.2 Composer / Prompt Box
 
-Bên trong shell, layout luôn là `flex flex-col`:
+Float ở vị trí gần đáy (mobile: `top-582 left-8 w-359`, desktop max-w-768). Container bg `--background`, border `1px var(--border)`, `--radius-lg`, `shadow-xs`.
+
+Cấu trúc 2 hàng:
 
 ```
-MobileShell (h-dvh flex flex-col overflow-hidden)
-├── TopBar           (shrink-0, h-14)
-├── [Optional pill]  (shrink-0, nếu có)
-├── Scroll area      (flex-1 overflow-y-auto no-scrollbar)
-│   └── content với px-3 py-3 flex flex-col gap-3
-└── Composer / BottomNav  (shrink-0)
+┌────────────────────────────────────────────────┐
+│  textarea  (placeholder "Nhắn cho Chang...")   │  ← h-64, p-3, Text-base/Regular muted
+├────────────────────────────────────────────────┤
+│ [+] [💡] [🔖]  │ @agent · /skill │ ⏎          │  ← pt-1.5 pb-3 px-3, gap-2
+└────────────────────────────────────────────────┘
 ```
 
-### Spacing system
+- Icon buttons `24 × 24` (plus có border, lightbulb/bookmark borderless): `lucide/plus`, `lucide/lightbulb`, `lucide/bookmark`.
+- Divider dọc 16px giữa các nhóm (rotated 1px line).
+- Center placeholder `@agent · /skill` — **font `JetBrains Mono Regular` 12 / 16**, `--muted-foreground`.
+- Submit `24 × 24`, bg `--primary`, `--radius-lg`, `shadow-xs`, icon `lucide/corner-down-left` 14 trắng.
 
-Base unit là **8px** (= Tailwind `2`).
+### 3.3 Sidebar — Desktop
 
-| Token | Value | Dùng khi |
-|---|---|---|
-| `px-3` / `px-6` | 12 / 24px | Container ngang mobile / desktop |
-| `py-3` / `py-4` | 12 / 16px | Scroll area top/bottom padding |
-| `p-3` | 12px | Card internal padding |
-| `gap-2` | 8px | Giữa các item trong cùng group |
-| `gap-3` | 12px | Giữa message bubbles |
-| `gap-4` | 16px | Giữa các section |
+Xem mục 2.8. Web 1440 × 1024 frame dùng sidebar `open` width 255 + body width 1185.
 
-### Desktop content width
+### 3.4 Mascot / Agent Avatar (Home)
 
-Các scroll area dùng `md:max-w-2xl md:mx-auto md:w-full` để giữ content trong vùng đọc thoải mái khi shell render trên màn hình lớn hơn 390px.
+- Circle `128 × 128`, `--radius-full`, border `1px var(--background)`.
+- Absolute "ngồi" trên đầu hero card (top `-64`), overlap nửa trong/nửa ngoài.
+- Dưới mascot: title `Chang nèe` (`Text-2xl/Semi Bold` 24 / 32 / 400 `--card-foreground`), subtitle `Chang giúp gì được cho anh không?` (`Text-sm/Regular` `--muted-foreground`).
+
+### 3.5 Hero card (Home)
+
+- bg `--card`, border `1px var(--border)`, `--radius-lg`, overflow-clip.
+- Header image băng ngang `h-145` với gradient; trên đó logo "Chang" + `|` + "Digital Workforce Platform" (`Text-sm/Light` 14 / 20 / 300 trắng).
+- Body: `pt-146 pb-16 px-16`, gap-10, wrap flex của quick-action chips.
+
+### 3.6 Quick-action chip (Suggestion pill)
+
+- `h-32`, `px-2.5` (10), `gap-1.5` (6), border `1px var(--border)`, `--radius-lg`, `shadow-xs`, bg `--background`.
+- Icon lucide 16 + label `Text-sm/Medium` `--foreground`.
+- Trong file Figma có sẵn: "Tra cứu Hợp đồng", "Clear Checklist", "Tra cứu Gói cước", "Lấy QR HTKH", "Xin nghỉ phép", "Lịch chiếu Film", "Báo cáo vấn đề đường truyền", "Thông tin thanh toán", "Tạo cuộc họp".
+
+### 3.7 Divider with label
+
+`flex items-center` — 2 đoạn `border-t 1px var(--border)` flex-1, chính giữa block text width 138 `px-2`. Text `Text-xs/Regular` uppercase muted, ví dụ "HOẶC XEM THÊM TẠI".
+
+### 3.8 Action row buttons (2-col grid)
+
+Pair button: 2 button flex-1, `h-32`, `gap-1.5`, `px-2.5`, border `1px var(--border)`, `--radius-lg`, `shadow-xs`, bg `--background`. Label `Text-sm/Medium`. Ví dụ "Gợi ý nhanh" / "Mẫu Prompt".
+
+### 3.9 MessageBubble — chưa có spec riêng
+
+Trong các leaf node được sample (Conversation mobile + Home), **không** thấy component MessageBubble độc lập — màn Conversation hiện chỉ có TopBar + body trống bg `--muted` + Composer. Khi cần dựng:
+
+- Dùng `Item` variant `muted` làm base (bg `--muted`, `--radius-lg`, `Text-sm/Regular`).
+- Phân biệt user / assistant bằng align (right / left) thay vì màu — Figma kit chưa định nghĩa khác biệt màu.
+- Cần extract thêm node-id sâu hơn trong section Conversation khi designer hoàn thiện.
 
 ---
 
-## Elevation & Depth
+## 4. Icons
 
-Không dùng shadow nhiều lớp. Depth được tạo bởi sự chênh màu nền — gọi là **surface stack**:
+**Lucide** là bộ icon mặc định trong toàn bộ Figma kit. File cũng có 2 page tham chiếu phụ:
 
-| Level | Surface | Class | Dùng khi |
-|---|---|---|---|
-| 0 — Stage | Light grey | `bg-muted` | Outer shell trên desktop |
-| 1 — App | White / near-black | `bg-background` | Nền toàn app |
-| 2 — Card | White / `card` | `bg-card border border-border` | List items, chips, panels |
-| 3 — Float | Semi-transparent | `bg-background/95 backdrop-blur-sm` | Composer (float trên scroll content) |
-| 4 — Frost | Blur + semi-trans | `.frost` | TopBar, sticky headers |
+- `Tabler Icons` (node `642:97`) — tham khảo, không dùng.
+- `Phosphor Icons` (node `1528:9`) — tham khảo, không dùng.
 
-**Frost utility** (`globals.css`):
-```css
-.frost {
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  background: hsl(var(--background) / 0.72);
-}
-```
+| Context | Size |
+| --- | --- |
+| TopBar / nav icons | 16 |
+| Button icon (small/default) | 14–16 |
+| Button icon (large) | 18 |
+| Composer toolbar icons | 16 (icon button 24 × 24) |
+| Item leading icon | 20–24 |
+| Breadcrumb separator | 14 |
 
-Frost tạo cảm giác "float" cho TopBar — khi scroll, content trượt qua dưới nhìn mờ qua lớp frost. Không thêm `box-shadow` vào TopBar — `border-b border-border` là separator đủ dùng.
+Stroke giữ default (`1.5`). Không dùng filled variant — kit là outline-only.
 
 ---
 
-## Shapes & Radius
+## 5. Pages & frame map
 
-Shape language là **rounded nhưng không quá mềm** — tạo sự chuyên nghiệp mà không lạnh lùng.
+Các section/frame chính trong page main `3004:5236`:
 
-| Token | Value | Pattern trong app |
-|---|---|---|
-| `rounded-sm` | 8px | Inner accent elements, small badge |
-| `rounded-md` | 12px | Icon containers (w-7 h-7), hover state |
-| `rounded-lg` | 16px | Cards, panels — **default card shape** |
-| `rounded-xl` | 20px | Chips, inputs, action buttons, TopBar buttons |
-| `rounded-2xl` | 24px | Chat bubbles, composer block |
-| `rounded-full` | pill | Badge count, micro-chips |
-| `rounded-[2.5rem]` | 40px | Device shell (tablet+) |
-
-**Quy tắc scale**: element càng nhỏ thì radius càng nhỏ. Icon 28px dùng `rounded-md`; card 300px dùng `rounded-xl`. Tránh "pill nhỏ trong hộp lớn" — trông lạc lõng về tỷ lệ.
-
----
-
-## Components
-
-### TopBar
-
-```
-[Command btn 36×36] [Agent badge: icon + "Chang"] ··· [Bell 36×36] [Theme toggle 36×36]
-```
-
-- Height: `h-14` (56px), `shrink-0`
-- Effect: `.frost` — blur 20px + semi-transparent
-- Separator: `border-b border-border`
-- Standalone buttons: `w-9 h-9 rounded-lg text-muted-foreground hover:bg-muted transition-colors`
-- Agent badge: `flex gap-2 px-2 py-1 rounded-lg bg-muted` với icon con `w-7 h-7 rounded-md bg-warning/15 text-warning`
-- Responsive: nhận `title` prop để thay "Chang" khi ở trong conversation view
-
-**Không thêm shadow** vào TopBar — separator border là đủ. Frost effect đảm nhận vai trò elevation.
+| Section | Frame | Node ID | Size |
+| --- | --- | --- | --- |
+| **Login** | (section) | `3020:6359` | 2055 × 1224 |
+| | Login — Mobile | `3004:5239` | 375 × 812 |
+| | Login — Web | `3004:8484` | 1440 × 1024 |
+| **Sidebar & Topbar** | (section) | `3035:16582` | 1548 × 1224 |
+| | Sidebar — Mobile | `3035:16890` | 375 × 768 |
+| | Notification Dropdown | `3048:800` | 350 × 416 |
+| **Prompt Box** | (section) | `3035:17183` | 2584 × 940 |
+| | Prompt Template | `3037:18138` | 768 × 720 |
+| | Properties | `3037:18139` | 768 × 614 |
+| **Home** | (section) | `3020:6360` | 3950 × 1224 |
+| | Home — Mobile | `3020:6361` | 375 × 812 |
+| | Home — Mobile (Full Menu) | `3033:13157` | 375 × 812 |
+| | Sidebar — Mobile (Home) | `3035:17091` | 375 × 768 |
+| | Home — Web (Full Menu) | `3020:6400` | 1440 × 1024 |
+| | Home — Web (Mini Menu) | `3030:12644` | 1440 × 1024 |
+| **Task Management** | (section) | `3048:1057` | 8000 × 1224 |
+| **Agent Profile & Dashboard** | (section) | `3048:7518` | 3950 × 1224 |
+| **User Profile & Dashboard** | (section) | `3048:7520` | 3950 × 1224 |
+| **Conversation** | (section) | `3048:1899` | 3950 × 1224 |
+| | Conversation — Mobile | `3048:1901` | 375 × 812 |
+| | Conversation — Web | `3048:2064` | 1440 × 1024 |
 
 ---
 
-### BottomNav
-
-```
-[Home] [Chang] [Apps] [Tasks] [Menu]
-```
-
-- `md:hidden` — chỉ hiển thị trên mobile
-- Background: `bg-background/80 backdrop-blur-lg`
-- Separator: `border-t border-border`
-- Mỗi tab: `flex-1 flex flex-col items-center justify-center gap-0.5 py-2`
-- Active: `text-primary`, icon `strokeWidth={2.2}`
-- Inactive: `text-muted-foreground`, icon `strokeWidth={1.75}`
-- Label: `text-[10px] font-medium`
-
-Active indicator chỉ dùng màu (`text-primary`) + stroke thicker — không có background highlight hay border/underline. Tối giản, không tạo thêm visual noise.
-
----
-
-### Card / List Item
-
-Pattern chuẩn dùng trong Apps và Tasks:
-
-```tsx
-<div className="flex items-start gap-3 p-3 rounded-xl border border-border bg-card
-                hover:border-primary/40 hover:bg-primary/5 active:scale-[0.99] transition-all">
-  {/* Icon tile */}
-  <div className="w-12 h-12 rounded-lg flex items-center justify-center shrink-0"
-       style={{ background: `hsl(var(--chart-N) / 0.18)`, color: `hsl(var(--chart-N))` }}>
-    <Icon size={22} />
-  </div>
-  {/* Content */}
-  <div className="flex-1 min-w-0">
-    <div className="font-semibold text-[15px] leading-tight">{title}</div>
-    <div className="text-[13px] text-muted-foreground mt-1 leading-snug line-clamp-2">{subtitle}</div>
-  </div>
-</div>
-```
-
-- Icon tile: tinted `chart-N / 0.18` — màu danh mục nhẹ nhàng, không lấn át text
-- `line-clamp-2` cho subtitle — giữ layout ổn định khi subtitle dài
-- Hover: primary tint border + bg — consistent signal "đây là interactive"
-- Press: `active:scale-[0.99]` — feedback rõ nhưng không làm layout nhảy
-
----
-
-### Suggestion Chips
-
-```tsx
-<button className="inline-flex items-center gap-2 px-3.5 py-3 rounded-xl
-                   border border-border bg-card text-[13px] text-left
-                   hover:border-primary/40 hover:bg-primary/5 active:scale-[0.98] transition-all">
-  <Icon size={16} style={{ color: CHART_COLORS[n] }} />
-  <span>{text}</span>
-</button>
-```
-
-- Icon inline trực tiếp (16px), không có wrapper tile — compact hơn card variant
-- `full` variant: `w-full` cho suggestions dài cần toàn chiều rộng
-- Layout: `flex-wrap gap-2` tạo grid tự nhiên không cần media query
-
----
-
-### Composer
-
-Cấu trúc 2 tầng:
-
-**Tầng outer** (`bg-background/95 backdrop-blur-sm px-3 pt-2 pb-3`): float nhẹ trên content bên dưới.
-
-**Tầng inner** (`rounded-xl border bg-card overflow-hidden`): unified block gom upload section + input row. `focus-within:border-primary/50` highlight cả block khi textarea được focus.
-
-```
-Composer outer (frost-lite)
-├── [AnimatePresence] UploadSection — height 0→auto khi mở
-│   ├── Header: "Tải lên nội dung" [X]
-│   ├── Drop zone (empty) hoặc chip grid (có file)
-│   └── border-b separator
-├── Input row: [textarea flex-1] [Mic 28×28] [Send 32×32]
-└── Chip row: [Attach] [Deep Think] [Agent] ··· [kbd hint]
-```
-
-**Textarea**: 1 row mặc định, auto-resize đến max 140px, `Enter` = send, `Shift+Enter` = newline.
-
-**Send button**: `w-8 h-8 rounded-full`
-- Active: `bg-primary text-primary-foreground shadow-sm hover:bg-primary/90 scale-100`
-- Disabled: `bg-muted text-muted-foreground opacity-50 scale-90`
-
-**Secondary chips** (Deep Think, Agent): `h-7 px-3 rounded-full border border-dashed border-border text-[12px]`. Border dashed signal "secondary/optional" — phân biệt với primary action.
-
----
-
-### Message Bubbles
-
-```
-User:    ············· [file chips?] [bubble bg-primary] [8px spacer]
-Chang:   [32px avatar] [bubble bg-muted] [thinking expand?]
-```
-
-| Property | User | Chang |
-|---|---|---|
-| Background | `bg-primary` | `bg-muted` |
-| Text | `text-primary-foreground` | `text-foreground` |
-| Corner | `tail-r` | `tail-l` |
-| Max-width | `max-w-[78%]` | `max-w-[78%]` |
-| Font | `text-[15px] leading-6` | `text-[15px] leading-6` |
-| Padding | `px-4 py-2.5` | `px-4 py-2.5` |
-
-`.tail-r` / `.tail-l` xóa border-radius góc "đuôi":
-```css
-.tail-r { border-bottom-right-radius: 6px; }
-.tail-l { border-bottom-left-radius: 6px; }
-```
-
-**ThinkingBubble**: 3 dots `w-2 h-2 rounded-full bg-muted-foreground/60`, animation `y: 0 → -4 → 0`, stagger `0.15s`.
-
-**Task expand**: toggle `<ChevronDown>` + `AnimatePresence` height animation. Khi mở: `border-l-2 border-border pl-3` tạo timeline track visual.
-
----
-
-### Task Cards (action variant)
-
-Extension của Card pattern với action bar:
-
-```tsx
-<motion.div layout className="rounded-xl border border-border bg-card overflow-hidden">
-  {/* Card header — giống list item */}
-  <div className="p-3 flex items-start gap-3">...</div>
-
-  {/* Action bar — chỉ khi actions=true && status='pending' */}
-  <div className="grid grid-cols-[1fr_1fr_auto] border-t border-border">
-    <button className="py-2.5 ... text-success border-r border-border hover:bg-success/5">
-      <Check size={15} /> Duyệt
-    </button>
-    <button className="py-2.5 ... text-destructive border-r border-border hover:bg-destructive/5">
-      <X size={15} /> Từ chối
-    </button>
-    <button className="py-2.5 px-4 ... text-muted-foreground hover:bg-muted">
-      <Ellipsis size={16} />
-    </button>
-  </div>
-</motion.div>
-```
-
-Sau khi approve/reject: status badge `rounded-full text-[11px] font-semibold px-2 py-0.5 bg-success/15 text-success` (hoặc destructive). `motion.div layout` đảm bảo transition mượt khi action bar collapse.
-
----
-
-## Motion & Interaction
-
-### Nguyên tắc
-
-1. **Animation phục vụ orientation** — chỉ animate khi giúp user hiểu "cái gì vừa thay đổi và ở đâu". Không animate để trang trí.
-2. **Enter nhanh, exit có chủ đích** — elements xuất hiện nhanh (200ms), biến mất chậm hơn nhẹ để user kịp "thấy" sự thay đổi.
-3. **Spring cho touch feedback** — `ease-spring` cho scale. `ease-out` cho panel transitions.
-
-### Catalog
-
-| Pattern | Spec | Áp dụng |
-|---|---|---|
-| Message appear | `opacity 0→1, y 8→0, 200ms ease-out` | Mỗi message bubble mới |
-| Panel expand | `height 0→auto, opacity 0→1, 200ms ease-out` | Upload section, thinking expand |
-| Press card | `active:scale-[0.99]` | Cards, list items |
-| Press chip | `active:scale-[0.98]` | Suggestion chips |
-| Dot bounce | `y: 0→-4→0, 600ms, stagger 0.15s` | ThinkingBubble dots |
-| Spinner | `border-t-transparent animate-spin` | In-progress tasks |
-
-### Framer Motion patterns
-
-```tsx
-// Message / list item enter
-<motion.div
-  initial={{ opacity: 0, y: 8 }}
-  animate={{ opacity: 1, y: 0 }}
-  transition={{ duration: 0.2 }}
-/>
-
-// Panel collapse/expand
-<AnimatePresence initial={false}>
-  {open && (
-    <motion.div
-      initial={{ height: 0, opacity: 0 }}
-      animate={{ height: 'auto', opacity: 1 }}
-      exit={{ height: 0, opacity: 0 }}
-      transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
-      className="overflow-hidden"
-    />
-  )}
-</AnimatePresence>
-
-// List reflow (TaskCard)
-<motion.div layout />
-```
-
----
-
-## Icons
-
-**Lucide React** toàn bộ. Không mix icon library.
-
-| Context | Size | strokeWidth |
-|---|---|---|
-| Navigation (active) | 22px | 2.2 |
-| Navigation (inactive) | 22px | 1.75 |
-| Card icon tiles | 22px | default (1.5) |
-| TopBar action buttons | 17–18px | default |
-| Inline text icons | 14–16px | default |
-| Micro actions (close, X) | 13–15px | default |
-| Send / Mic | 15–16px | default |
-
-**Icon tiles** trong cards không có màu inline — dùng `color: hsl(var(--chart-N))` kết hợp `background: hsl(var(--chart-N) / 0.18)` trên container. Tách màu khỏi icon giúp dễ đổi chart color mà không cần update component.
-
-**Navigation**: stroke thay đổi thay vì filled/outline variant — đơn giản hơn và không cần hai bộ icon.
-
----
-
-## Accessibility
-
-### Contrast
-
-- `text-foreground` trên `bg-background`: ≥ 7:1 (AAA) cả light lẫn dark
-- `text-muted-foreground` trên `bg-background`: ≥ 4.5:1 (AA)
-- `bg-primary text-primary-foreground`: ≥ 4.5:1 (AA)
-- Không dùng màu làm tín hiệu duy nhất — luôn kết hợp icon hoặc text label
-
-### Touch targets
-
-- Minimum tap area: `w-9 h-9` (36×36px) cho mọi standalone button
-- Bottom nav items: `flex-1 py-2` đảm bảo toàn chiều cao column dễ tap
-- Card toàn bộ là clickable (không chỉ button con bên trong), trừ các action button nội bộ
-
-### Scroll UX
-
-- `.no-scrollbar` ẩn scrollbar — clean UI, user vẫn scroll được bình thường
-- Dùng `overflow-y-auto` thay `overflow-y-scroll` — scrollbar chỉ xuất hiện khi cần
-- Auto-scroll to bottom: `ref.current?.scrollIntoView({ behavior: 'smooth' })`
-
----
-
-## Token Cheat Sheet
-
-```tsx
-// ── Surfaces ──────────────────────────────────────────────────
-bg-background           // trang chủ nền
-bg-card                 // cards, list items
-bg-muted                // hover state, secondary surface, Chang bubble
-bg-primary              // primary action fill
-bg-primary/5            // primary hover tint trên card
-bg-primary/10           // primary active tint trên chip
-
-// ── Text ──────────────────────────────────────────────────────
-text-foreground         // primary text
-text-muted-foreground   // secondary / hint text
-text-primary            // brand accent text (active state)
-text-primary-foreground // text trên primary bg
-
-// ── Borders ───────────────────────────────────────────────────
-border-border           // standard border
-border-primary/40       // hover border trên card
-border-primary/50       // focus border trên input
-border-dashed border-border  // secondary chip border
-
-// ── Status ────────────────────────────────────────────────────
-bg-success/15 text-success
-bg-destructive/15 text-destructive
-bg-warning/15 text-warning
-bg-info/10 text-info
-
-// ── Chart icon tiles ──────────────────────────────────────────
-style={{ background: `hsl(var(--chart-1) / 0.18)`, color: `hsl(var(--chart-1))` }}
-// chart-1 violet · chart-2 sky · chart-3 amber · chart-4 green · chart-5 pink · chart-6 teal
-
-// ── Motion ────────────────────────────────────────────────────
-transition-colors         // color-only transitions (hover bg/text)
-transition-all            // khi cả scale thay đổi
-active:scale-[0.98]       // press feedback chips
-active:scale-[0.99]       // press feedback cards
-```
-
----
-
-## Do & Don't
-
-| ✅ Do | ❌ Don't |
-|---|---|
-| Dùng `text-muted-foreground` cho hint text | Dùng `text-foreground/60` opacity trực tiếp cho body text |
-| `border border-border bg-card` cho cards | `border-gray-200` hoặc hex trực tiếp |
-| Toggle dark mode qua `useTheme().setTheme()` | Viết `dark:bg-gray-900` trong component |
-| `w-9 h-9` minimum cho standalone buttons | Buttons nhỏ hơn 36px trong vùng touch |
-| `line-clamp-2` cho subtitle trong list | Để subtitle tràn dòng tự do |
-| `chart-1…6` cho icon tiles theo danh mục | Màu cố định không theo palette |
-| Wrap list với `<AnimatePresence>` | Animate layout thủ công với CSS |
-| `active:scale-[0.98]` cho press feedback chips | `scale(0.95)` quá mạnh |
-| `gap-*` và `flex` cho layout | Margin âm hoặc padding asymmetric |
-| `h-dvh` cho full-screen container | `h-screen` — sai trên mobile browser |
-| `no-scrollbar` trên scroll container | Để scrollbar native hiển thị trong app |
+## 6. Gaps & ghi chú so với code hiện tại
+
+Phục vụ plan refactor sau:
+
+1. **Font**: Figma `Noto Sans` — repo dùng `Inter Variable`. Bổ sung `JetBrains Mono` cho Composer placeholder.
+2. **Primary color**: Figma `#171717` (zinc/black) — repo dùng `hsl(262 83% 58%)` (Violet 600). Đây là khác biệt visual lớn nhất.
+3. **Radius scale**: Figma **chỉ** có `10px` + `full` — repo có 5 nấc `8 / 12 / 16 / 20 / 24 / 40px`. Cần thống nhất một radius.
+4. **Dark mode**: Figma chưa export → giữ token dark hiện tại của repo cho tới khi Figma cập nhật.
+5. **Chart palette**: Figma không có `chart-1…6` → đề xuất giữ palette repo nhưng map lại hue cho hợp tone zinc nếu refactor.
+6. **Composer placeholder**: cần block riêng `@agent · /skill` font mono — hiện code chưa có.
+7. **Frost / blur**: Figma không dùng backdrop-blur ở TopBar/Composer — chỉ border + shadow. Cần quyết định giữ hay bỏ `.frost` utility.
+8. **MessageBubble**: Figma chưa thiết kế — chờ designer hoặc giữ pattern hiện tại của code.
+
+Refactor sẽ làm theo plan riêng — không thay đổi code trong scope của file này.
